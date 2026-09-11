@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import {
   Activity,
   ArrowUpRight,
+  BookOpen,
   BrainCircuit,
   ChevronRight,
   CircleHelp,
@@ -21,6 +22,7 @@ import {
 } from "lucide-react";
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import AiTutor from "./ai-tutor";
+import NotesHub from "./notes-hub";
 import StudyWatermark from "./study-watermark";
 
 export type Topic = { topic: string; mastery: number; confidence: number; attempts: number; accuracy: number };
@@ -59,12 +61,14 @@ const nav = [
   { label: "Overview", icon: LayoutDashboard },
   { label: "Practice", icon: ListChecks },
   { label: "Knowledge map", icon: BrainCircuit },
+  { label: "Notes", icon: BookOpen },
   { label: "AI tutor", icon: MessageCircle },
 ];
 
 export default function Dashboard() {
   const router = useRouter();
   const [active, setActive] = useState("Overview");
+  const [tutorPrompt, setTutorPrompt] = useState("");
   const [twin, setTwin] = useState<Twin | null>(null);
   const [history, setHistory] = useState<ActivityRecord[]>([]);
   const [userProfile, setUserProfile] = useState({ name: "Alex Smith", email: "alex@example.com", field: "Computer Science" });
@@ -253,8 +257,18 @@ export default function Dashboard() {
           <Overview twin={twin} topics={topics} history={history} setActive={setActive} router={router} date={activityDate} />
         )}
         {active === "Knowledge map" && <KnowledgeMap topics={topics} router={router} />}
+        {active === "Notes" && (
+          <NotesHub
+            topics={topics}
+            onOpenQuiz={(topic) => router.push(`/quiz?topic=${encodeURIComponent(topic)}`)}
+            onAskAi={(prompt) => {
+              setTutorPrompt(prompt);
+              setActive("AI tutor");
+            }}
+          />
+        )}
         {active === "History" && <History history={history} date={activityDate} />}
-        {active === "AI tutor" && <AiTutor />}
+        {active === "AI tutor" && <AiTutor initialPrompt={tutorPrompt} />}
       </main>
 
       {dialog && (

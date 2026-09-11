@@ -96,7 +96,7 @@ function FormattedContent({ content }: { content: string }) {
   );
 }
 
-export default function AiTutor() {
+export default function AiTutor({ initialPrompt }: { initialPrompt?: string } = {}) {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
@@ -105,10 +105,23 @@ export default function AiTutor() {
         "Hi! I'm digiGUIDE, your computer science adaptive tutor. What concept or problem would you like to explore together?",
     },
   ]);
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState(initialPrompt || "");
   const [loading, setLoading] = useState(false);
   const textarea = useRef<HTMLTextAreaElement>(null);
   const bottom = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (initialPrompt && initialPrompt.trim()) {
+      setInput(initialPrompt);
+      setTimeout(() => {
+        if (textarea.current) {
+          textarea.current.focus();
+          textarea.current.style.height = "0px";
+          textarea.current.style.height = `${Math.min(textarea.current.scrollHeight, 150)}px`;
+        }
+      }, 100);
+    }
+  }, [initialPrompt]);
 
   useEffect(() => {
     // Personalize greeting if user is saved in localStorage
