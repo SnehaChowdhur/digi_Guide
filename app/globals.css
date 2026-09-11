@@ -606,3 +606,11 @@ h1, h2, h3, p { margin: 0; } h1 { font-family: 'Space Grotesk'; font-size: clamp
     margin: 0 !important;
   }
 }
+
+/* Flashcard 3D Flip Utilities */
+.perspective-1000 { perspective: 1000px; }
+.transform-style-3d { transform-style: preserve-3d; }
+.backface-hidden { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.rotate-y-180 { transform: rotateY(180deg); }
+.flashcard-inner { transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+
