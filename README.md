@@ -1,7 +1,6 @@
-<img width="1347" height="633" alt="Screenshot 2026-09-11 152723" src="https://github.com/user-attachments/assets/b932d08b-b7ab-4c0a-adf8-10023f384692" />
-
 <img width="1298" height="607" alt="Screenshot 2026-09-11 161929" src="https://github.com/user-attachments/assets/d9be395e-1d7d-4b69-ace6-6a25053442a4" />
 <img width="1348" height="624" alt="Screenshot 2026-09-11 152450" src="https://github.com/user-attachments/assets/30fbbbe1-3499-4294-8d78-db10f93fdb79" />
+<img width="1347" height="633" alt="Screenshot 2026-09-11 152723" src="https://github.com/user-attachments/assets/b932d08b-b7ab-4c0a-adf8-10023f384692" />
 
 Personal Learning Digital Twin
 1. Project Overview
