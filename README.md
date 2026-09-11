@@ -94,6 +94,9 @@ Explain difficult concepts
 Generate questions
 Create study plans
 Provide personalized feedback
+
+AI Tutor setup
+The dashboard AI Tutor uses Google Gemini 2.5 Flash through the server-only @google/genai SDK. Copy .env.example to .env.local and set GEMINI_API_KEY before sending chat messages. The Next.js route is POST /api/chat and accepts a messages array; responses stream as plain text.
 Optional Document Intelligence
 Students can upload PDFs or notes. The system uses embeddings and semantic search to find relevant learning material for their weak topics.
 
