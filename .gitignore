@@ -1,8 +1,10 @@
 node_modules
 .next
 .env
+.env.local
 .venv
 venv/
+digi_Guide/
 *.tsbuildinfo
 __pycache__
 *.pyc

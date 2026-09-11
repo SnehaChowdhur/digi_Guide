@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -22,8 +22,8 @@ _topics = [
     {"topic": "Dynamic Programming", "mastery": 38, "confidence": .47, "attempts": 21, "accuracy": .43},
 ]
 _activity: list[ActivityRecord] = [
-    ActivityRecord(id=1, topic="Arrays", kind="Quiz", summary="Completed Arrays: Sliding Window", detail="8 of 10 correct", created_at=datetime.utcnow()),
-    ActivityRecord(id=2, topic="Trees", kind="Study session", summary="Reviewed Tree Traversals", detail="24 minutes", created_at=datetime.utcnow()),
+    ActivityRecord(id=1, topic="Arrays", kind="Quiz", summary="Completed Arrays: Sliding Window", detail="8 of 10 correct", created_at=datetime.now(timezone.utc)),
+    ActivityRecord(id=2, topic="Trees", kind="Study session", summary="Reviewed Tree Traversals", detail="24 minutes", created_at=datetime.now(timezone.utc)),
 ]
 _preferences = Preferences()
 
@@ -46,7 +46,7 @@ def submit_activity(student_id: str, activity: ActivitySubmission) -> LearningTw
     topics = [TopicMastery(**topic) for topic in _topics]
     updated = [apply_activity(topic, activity) if topic.topic.lower() == activity.topic.lower() else topic for topic in topics]
     _topics[:] = [topic.model_dump() for topic in updated]
-    _activity.insert(0, ActivityRecord(id=len(_activity) + 1, topic=activity.topic, kind="Quiz", summary=f"Completed {activity.topic}", detail="Correct answer" if activity.correct else "Needs another look", created_at=datetime.utcnow()))
+    _activity.insert(0, ActivityRecord(id=len(_activity) + 1, topic=activity.topic, kind="Quiz", summary=f"Completed {activity.topic}", detail="Correct answer" if activity.correct else "Needs another look", created_at=datetime.now(timezone.utc)))
     return LearningTwin(student_id=student_id, overall_score=overall_score(updated), streak_days=6, weekly_study_hours=6.4, topics=updated, recommendations=build_recommendations(updated))
 
 

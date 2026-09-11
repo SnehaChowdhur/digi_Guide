@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from ..models import ActivitySubmission, TopicMastery
 
 
@@ -18,7 +18,7 @@ def apply_activity(topic: TopicMastery, activity: ActivitySubmission) -> TopicMa
         "attempts": attempts,
         "accuracy": round(accuracy, 3),
         "confidence": round(confidence, 3),
-        "last_practiced": datetime.utcnow(),
+        "last_practiced": datetime.now(timezone.utc),
     })
 
 

@@ -15,6 +15,11 @@ export default function AiTutor() {
   const bottom = useRef<HTMLDivElement>(null);
 
   useEffect(() => { bottom.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
+  useEffect(() => {
+    const receivePrompt = (event: Event) => { const prompt = (event as CustomEvent<string>).detail; if (prompt) setInput(prompt); };
+    window.addEventListener("digiguide:tutor-prompt", receivePrompt);
+    return () => window.removeEventListener("digiguide:tutor-prompt", receivePrompt);
+  }, []);
   const resize = () => { const element = textarea.current; if (element) { element.style.height = "0px"; element.style.height = `${Math.min(element.scrollHeight, 150)}px`; } };
   const send = async (event?: FormEvent) => {
     event?.preventDefault();

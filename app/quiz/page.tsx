@@ -24,7 +24,14 @@ export default function QuizPage() {
     if (selected === null || submitting) return;
     setSubmitting(true);
     const correct = selected === question.correct;
-    try { await fetch(`${API}/api/twin/alex/activity`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ topic: question.topic, correct, difficulty: 0.7, time_seconds: 60 }) }); } catch { /* The result remains usable if the API is offline. */ }
+    try {
+      const response = await fetch(`${API}/api/twin/alex/activity`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ topic: question.topic, correct, difficulty: 0.7, time_seconds: 60 }) });
+      if (!response.ok) throw new Error("Practice API unavailable");
+    } catch {
+      const saved = JSON.parse(window.localStorage.getItem("digiguide-activity") || "[]") as { id: number; topic: string; kind: string; summary: string; detail: string; created_at: string }[];
+      saved.unshift({ id: Date.now(), topic: question.topic, kind: "Quiz", summary: `Completed ${question.topic}`, detail: correct ? "Correct answer" : "Needs another look", created_at: new Date().toISOString() });
+      window.localStorage.setItem("digiguide-activity", JSON.stringify(saved.slice(0, 12)));
+    }
     const nextAnswers = [...answers, correct];
     setAnswers(nextAnswers);
     if (step === questions.length - 1) setDone(true); else { setStep(step + 1); setSelected(null); }
