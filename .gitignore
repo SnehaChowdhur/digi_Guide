@@ -1,9 +1,16 @@
 node_modules
 .next
 .env
+.env*.local
 .venv
 venv/
 *.tsbuildinfo
 __pycache__
 *.pyc
+.pytest_cache/
+.coverage
+htmlcov/
+dist/
+build/
 .DS_Store
+

@@ -25,6 +25,16 @@ class Prediction(BaseModel):
     confidence: float
 
 
+class Question(BaseModel):
+    id: int
+    topic: str
+    prompt: str
+    answers: list[str]
+    correct: int
+    explanation: str
+    difficulty: float = Field(default=0.5, ge=0, le=1)
+
+
 class ActivityRecord(BaseModel):
     id: int
     topic: str

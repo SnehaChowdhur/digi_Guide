@@ -215,6 +215,40 @@ Weak-topic detection
 ML-based performance prediction
 AI-generated personalized study plan
 Knowledge graph visualization
-The strongest demo is:
-Take quiz → make mistakes → Digital Twin updates → weak topic detected → AI predicts risk → personalized study plan generated.
-provide me a read me file content in a simple way
+
+## 11. Quick Start Guide
+
+### Prerequisites
+- Node.js 18+ and npm
+- Python 3.11+
+- (Optional) Docker for PostgreSQL
+
+### 1. Run the Python Backend
+```bash
+# Create and activate virtual environment (if not already done)
+python -m venv .venv
+# On Windows PowerShell:
+.\.venv\Scripts\Activate.ps1
+# On macOS/Linux:
+source .venv/bin/activate
+
+# Install backend dependencies
+pip install -r backend/requirements.txt
+
+# Start the FastAPI server (runs on port 8000)
+uvicorn backend.app.main:app --reload --port 8000
+```
+
+### 2. Run the Next.js Frontend
+```bash
+# Install frontend dependencies
+npm install
+
+# Setup environment variables
+copy .env.example .env.local
+
+# Run the Next.js dev server (runs on port 3000)
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser.
