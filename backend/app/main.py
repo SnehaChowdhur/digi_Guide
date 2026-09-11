@@ -6,7 +6,7 @@ from .models import ActivityRecord, ActivitySubmission, LearningTwin, Prediction
 from .services.recommendation_engine import build_recommendations
 from .services.twin_engine import apply_activity, overall_score
 
-app = FastAPI(title="NOVA Learning Twin API", version="0.1.0")
+app = FastAPI(title="digiGUIDE Learning Twin API", version="0.1.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000", "http://localhost:3001", "http://127.0.0.1:3000", "http://127.0.0.1:3001"],

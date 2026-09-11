@@ -1,0 +1,4 @@
+# Optional ML tooling. Install with Python 3.13 or an environment with
+# prebuilt wheels when you are ready to add model training/inference.
+numpy>=2.2.2
+scikit-learn>=1.6.1
