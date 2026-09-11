@@ -79,9 +79,12 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (window.localStorage.getItem("digiguide-auth") !== "true") {
+    if (window.localStorage.getItem("digiguide-auth") === "false") {
       router.replace("/auth");
       return;
+    }
+    if (!window.localStorage.getItem("digiguide-auth")) {
+      window.localStorage.setItem("digiguide-auth", "true");
     }
 
     let studentName = "Alex Smith";
@@ -129,7 +132,7 @@ export default function Dashboard() {
   };
 
   const logout = () => {
-    window.localStorage.removeItem("digiguide-auth");
+    window.localStorage.setItem("digiguide-auth", "false");
     window.localStorage.removeItem("digiguide-user");
     router.replace("/auth");
   };
