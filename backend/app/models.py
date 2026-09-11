@@ -25,6 +25,21 @@ class Prediction(BaseModel):
     confidence: float
 
 
+class ActivityRecord(BaseModel):
+    id: int
+    topic: str
+    kind: str
+    summary: str
+    detail: str
+    created_at: datetime
+
+
+class Preferences(BaseModel):
+    name: str = "Alex Smith"
+    weekly_goal_hours: float = Field(default=8, ge=1, le=40)
+    daily_reminders: bool = True
+
+
 class Recommendation(BaseModel):
     topic: str
     reason: str
