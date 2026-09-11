@@ -2,33 +2,23 @@
 
 import { useEffect, useMemo, useState } from "react";
 import {
-  ArrowLeft,
   ArrowRight,
-  ArrowUpRight,
-  BookMarked,
   BookOpen,
   Bookmark,
   Check,
   CheckCircle2,
-  ChevronRight,
   Code2,
   Copy,
-  Download,
   ExternalLink,
-  Eye,
   Filter,
   GraduationCap,
   Layers,
   MessageCircle,
   Play,
-  PlayCircle,
   Printer,
   RotateCcw,
   Search,
-  Share2,
   Sparkles,
-  Tag,
-  Video,
   X,
   Youtube,
   Zap,
@@ -103,10 +93,10 @@ const STUDY_NOTES: StudyNote[] = [
     difficulty: "Advanced",
     readingTime: "6 min read",
     summary: [
-      "Deconstructs complex optimization problems into overlapping, recursive subproblems.",
-      "Memoization (Top-Down): Caches evaluation results in a dictionary/array to eliminate re-computation.",
-      "Tabulation (Bottom-Up): Evaluates dependencies iteratively starting from the elementary base cases.",
-      "Space Optimization: Condenses DP arrays to O(1) memory when transitions depend only on preceding k states."
+      "Solves complex optimization problems by decomposing into overlapping subproblems.",
+      "Memoization (Top-Down): Caches evaluation results in a dictionary or array.",
+      "Tabulation (Bottom-Up): Evaluates dependencies iteratively starting from base cases.",
+      "Space Optimization: Condenses DP arrays to O(1) memory when transitions depend on preceding k states."
     ],
     keyFormula: "dp[i] = min(dp[i - coin] + 1) for coin in coins",
     diagramAscii: `[Recursive Redundancy Tree: fib(5)]
@@ -126,9 +116,8 @@ Naive: O(2^n) calls  --->  With Memoization Cache: O(n) calls`,
     Time Complexity: O(amount * len(coins))
     Space Complexity: O(amount)
     """
-    # Initialize DP array with infinity (representing unreachable states)
     dp = [float('inf')] * (amount + 1)
-    dp[0] = 0  # Base case: 0 coins needed to make amount 0
+    dp[0] = 0  # Base case: 0 coins needed for amount 0
 
     for i in range(1, amount + 1):
         for coin in coins:
@@ -145,7 +134,7 @@ Naive: O(2^n) calls  --->  With Memoization Cache: O(n) calls`,
       time: "O(n × W)",
       space: "O(W)",
       timeDetails: "Linear with respect to state space and number of transitions per state.",
-      spaceDetails: "Linear in state space, often compressible to O(1) or O(W) using rolling arrays."
+      spaceDetails: "Linear in state space, often compressible to O(1) using rolling variables."
     },
     openSourceRef: {
       gfgTitle: "GeeksforGeeks: Dynamic Programming (DP) Complete Guide",
@@ -156,12 +145,12 @@ Naive: O(2^n) calls  --->  With Memoization Cache: O(n) calls`,
       keyQuote: "Dynamic programming solves problems by combining the solutions to subproblems. Unlike divide-and-conquer, DP is applicable when subproblems overlap—that is, when subproblems share subsubproblems."
     },
     videoResource: {
-      title: "Dynamic Programming for Beginners - Full Course",
-      channel: "NeetCode",
-      duration: "18:42",
+      title: "Dynamic Programming - Learn to Solve Algorithmic Problems",
+      channel: "freeCodeCamp.org",
+      duration: "5:10:00",
       youtubeUrl: "https://www.youtube.com/watch?v=oBt53YbR9Kk",
       youtubeEmbedId: "oBt53YbR9Kk",
-      highlight: "Step-by-step intuition: moving from brute-force recursion tree to memoization and bottom-up DP arrays."
+      highlight: "Universal masterclass covering memoization recipes, tabulation formulas, grid traveler, and knapsack."
     },
     deepDive: {
       intuition: "Dynamic Programming is disciplined recursion with memory. When solving a problem where subproblems repeat (like computing Fibonacci or 0/1 Knapsack), standard recursion re-evaluates identical subtrees billions of times. DP guarantees that each unique subproblem is computed exactly once.",
@@ -246,11 +235,9 @@ def is_valid_bst(root: TreeNode | None, low=float('-inf'), high=float('inf')) ->
     if not root:
         return True
     
-    # Current node value must be strictly within bounded range
     if not (low < root.val < high):
         return False
     
-    # Left children must be < root.val; Right children must be > root.val
     return (is_valid_bst(root.left, low, root.val) and 
             is_valid_bst(root.right, root.val, high))`,
       explanation: "Propagates (low, high) bounds downward to prevent deep subtrees from violating ancestor constraints."
@@ -270,12 +257,12 @@ def is_valid_bst(root: TreeNode | None, low=float('-inf'), high=float('inf')) ->
       keyQuote: "The binary-search-tree property guarantees that an in-order tree walk prints all keys in sorted order in Θ(n) time. Searching, minimum, maximum, predecessor, and successor all run in O(h) time where h is the tree height."
     },
     videoResource: {
-      title: "Binary Tree Algorithms for Technical Interviews",
-      channel: "freeCodeCamp.org",
-      duration: "2:01:45",
-      youtubeUrl: "https://www.youtube.com/watch?v=fAAZ2GDZCQY",
-      youtubeEmbedId: "fAAZ2GDZCQY",
-      highlight: "Comprehensive visual walk-through of BFS queue level order, DFS tree recursion, and lowest common ancestor."
+      title: "Data Structures: Trees & Binary Search Trees",
+      channel: "HackerRank (Gayle McDowell)",
+      duration: "10:13",
+      youtubeUrl: "https://www.youtube.com/watch?v=oSWTXtMglKE",
+      youtubeEmbedId: "oSWTXtMglKE",
+      highlight: "Gayle Laakmann McDowell (Author of Cracking the Coding Interview) breaks down BST properties and recursive traversal."
     },
     deepDive: {
       intuition: "Trees are non-linear data structures that capture hierarchy and logarithmic partitioning. Because every subtree is itself a complete tree, almost all tree algorithms are naturally expressed as 3-line structural recursions on root, left, and right.",
@@ -337,11 +324,6 @@ Left                                              Right
 [ 2,    4,    6,    8,   10,   12,   15,   18,   20 ]
 Sum = 2 + 20 = 22 (> 14) -> Decrement Right Pointer!
 
-Left                                        Right
- v                                            v
-[ 2,    4,    6,    8,   10,   12,   15,   18,   20 ]
-Sum = 2 + 18 = 20 (> 14) -> Decrement Right Pointer!
-
        Left                           Right
         v                               v
 [ 2,    4,    6,    8,   10,   12,   15,   18,   20 ]
@@ -383,12 +365,12 @@ Sum = 4 + 10 = 14 (== 14) -> MATCH FOUND in O(n) time!`,
       keyQuote: "Because array elements are stored in contiguous memory blocks, knowing the base address and index yields instant O(1) random access: Address = Base + (Index * Element_Size). This spatial locality maximizes CPU L1/L2 cache hits."
     },
     videoResource: {
-      title: "Two Pointer Technique & Sliding Window for Coding Interviews",
-      channel: "NeetCode",
-      duration: "14:20",
+      title: "Visual Introduction to Two Pointer Algorithm",
+      channel: "Josh's DevBox",
+      duration: "8:56",
       youtubeUrl: "https://www.youtube.com/watch?v=On03HWe2tZM",
       youtubeEmbedId: "On03HWe2tZM",
-      highlight: "Explains how to collapse nested O(n²) quadratic loops into linear O(n) single passes."
+      highlight: "Visual animation of pointer movements and sliding window transitions for interview problems."
     },
     deepDive: {
       intuition: "Arrays are the most fundamental building block in computer science. They map directly to hardware RAM memory buses. Because memory addresses are contiguous, CPUs prefetch entire cache lines into L1 cache, making array access vastly faster than pointer-chasing node structures.",
@@ -453,8 +435,7 @@ Step 3:   None <- [1] <- [2] <- [3] <- [4] (New Head)
 Head -> [1] -> [2] -> [3] -> [4] --\\
                 ^                  |
                 +-------- [6] <- [5]
-Slow advances 1 step. Fast advances 2 steps.
-Relative speed difference = 1 node/step -> Guaranteed collision inside the loop!`,
+Slow advances 1 step. Fast advances 2 steps. Guaranteed collision in loop!`,
     codeSnippet: {
       language: "python",
       code: `class ListNode:
@@ -477,14 +458,14 @@ def reverse_list(head: ListNode | None) -> ListNode | None:
         prev = curr            # 3. Advance prev forward
         curr = next_temp       # 4. Advance curr forward
         
-    return prev  # New head of the reversed list`,
+    return prev`,
       explanation: "Maintains prev and next_temp pointers to invert direction in-place without memory allocation."
     },
     complexity: {
       time: "O(n)",
       space: "O(1)",
       timeDetails: "Single traversal visiting each node exactly once.",
-      spaceDetails: "Strictly in-place pointer manipulation; no new heap objects allocated."
+      spaceDetails: "Strictly in-place pointer manipulation; zero new heap allocations."
     },
     openSourceRef: {
       gfgTitle: "GeeksforGeeks: Linked List Data Structure Tutorial",
@@ -495,12 +476,12 @@ def reverse_list(head: ListNode | None) -> ListNode | None:
       keyQuote: "A linked list represents dynamic sets without contiguous memory constraints. Inserting or deleting at a known pointer location takes O(1) time without element shifting, but accessing the k-th element requires linear O(k) traversal."
     },
     videoResource: {
-      title: "Data Structures: Singly Linked List Operations",
-      channel: "Abdul Bari",
-      duration: "26:30",
-      youtubeUrl: "https://www.youtube.com/watch?v=nobqZ_o8v-M",
-      youtubeEmbedId: "nobqZ_o8v-M",
-      highlight: "Masterclass on node pointer reassignment, dummy head allocation, and cyclic collision proofs."
+      title: "Introduction to Linked Lists & Pointers",
+      channel: "CS Dojo",
+      duration: "13:48",
+      youtubeUrl: "https://www.youtube.com/watch?v=WwfhLC16bis",
+      youtubeEmbedId: "WwfhLC16bis",
+      highlight: "Clear, visual explanation of node pointers, memory differences from arrays, and traversal methods."
     },
     deepDive: {
       intuition: "Unlike arrays which require contiguous pre-allocated memory slabs, linked lists grow organically one node at a time wherever RAM has free space. Pointers tie the sequence together. The trade-off is losing instant O(1) index access in exchange for instant O(1) head insertion/deletion.",
@@ -508,7 +489,7 @@ def reverse_list(head: ListNode | None) -> ListNode | None:
       definitions: [
         {
           term: "Floyd's Tortoise & Hare",
-          explanation: "Cycle detection algorithm using two pointers at speeds 1 and 2. Fast enters the loop first; every iteration reduces gap by 1 until they collide."
+          explanation: "Cycle detection algorithm using two pointers at speeds 1 and 2. Fast enters the loop first; every iteration reduces gap by 1 until collision."
         },
         {
           term: "Dummy / Sentinel Node",
@@ -576,16 +557,12 @@ Missing base case -> Call Stack Memory Overflows -> RecursionError!`,
     result = []
     
     def backtrack(start_index: int, current_path: list[int]):
-        # Add a shallow copy of the current combination
         result.append(list(current_path))
         
         for i in range(start_index, len(nums)):
-            # 1. Choose candidate
-            current_path.append(nums[i])
-            # 2. Explore deeper branch
-            backtrack(i + 1, current_path)
-            # 3. Un-choose / Backtrack (undo state)
-            current_path.pop()
+            current_path.append(nums[i])      # 1. Choose
+            backtrack(i + 1, current_path)   # 2. Explore
+            current_path.pop()               # 3. Un-choose
             
     backtrack(0, [])
     return result`,
@@ -606,12 +583,12 @@ Missing base case -> Call Stack Memory Overflows -> RecursionError!`,
       keyQuote: "Recursion is when a function calls itself. Every recursive function has two parts: the base case (when the function stops calling itself) and the recursive case (when it calls itself). The call stack stores variables for each pending execution."
     },
     videoResource: {
-      title: "What is Recursion? - Call Stacks and Base Cases Explained",
-      channel: "Computerphile",
-      duration: "9:44",
-      youtubeUrl: "https://www.youtube.com/watch?v=Mv9NGuOPlE4",
-      youtubeEmbedId: "Mv9NGuOPlE4",
-      highlight: "Professor David Brailsford visualizes the stack pointer, activation records, and stack overflow traps."
+      title: "5 Simple Steps for Solving Any Recursive Problem",
+      channel: "Reducible",
+      duration: "15:42",
+      youtubeUrl: "https://www.youtube.com/watch?v=ngCos392W4w",
+      youtubeEmbedId: "ngCos392W4w",
+      highlight: "Visual breakdown of building intuition, spotting subproblems, and constructing base cases cleanly."
     },
     deepDive: {
       intuition: "Recursion is mathematically equivalent to Mathematical Induction: prove the base case holds for n=0 or n=1, then show that if it holds for n-1, it holds for n. Your code handles the base case and trusts the recursive call to return the correct smaller solution.",
@@ -685,7 +662,6 @@ Function Invocation f(args)
       language: "python",
       code: `from functools import lru_cache
 
-# Using Python's standard library C-accelerated LRU cache decorator
 @lru_cache(maxsize=None)
 def climb_stairs(n: int) -> int:
     """
@@ -697,7 +673,7 @@ def climb_stairs(n: int) -> int:
         return n
     return climb_stairs(n - 1) + climb_stairs(n - 2)
 
-# Manual Dictionary Implementation (Interview Standard):
+# Manual Dictionary Implementation:
 def climb_stairs_manual(n: int, memo: dict | None = None) -> int:
     if memo is None:
         memo = {}
@@ -834,7 +810,7 @@ largest = -heapq.heappop(max_heap) # Returns 9`,
       duration: "12:34:00",
       youtubeUrl: "https://www.youtube.com/watch?v=pkYVOmU3MgA",
       youtubeEmbedId: "pkYVOmU3MgA",
-      highlight: "University-level algorithms course in Python covering memory addresses, hash tables, heaps, and tree structures."
+      highlight: "Comprehensive algorithms course in Python covering memory addresses, hash tables, heaps, and tree structures."
     },
     deepDive: {
       intuition: "In Python, writing code that looks clean is not enough; interviewers test your awareness of CPython internals. Knowing why list.pop(0) degrades an algorithm from O(n) to O(n²) separates junior scripts from senior software engineers.",
@@ -907,7 +883,6 @@ export default function NotesHub({
   const [copiedCodeId, setCopiedCodeId] = useState<string | null>(null);
   const [flippedCards, setFlippedCards] = useState<Record<string, boolean>>({});
 
-  // Load bookmarks from localStorage
   useEffect(() => {
     try {
       const stored = window.localStorage.getItem("digiguide-notes-bookmarks");
@@ -939,13 +914,11 @@ export default function NotesHub({
     setFlippedCards((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
-  // Match topic mastery percentage from twin topics
   const getTopicMastery = (topicName: string): number => {
     const match = topics.find((t) => t.topic.toLowerCase() === topicName.toLowerCase());
     return match ? Math.round(match.mastery) : 65;
   };
 
-  // Filtered notes calculation
   const filteredNotes = useMemo(() => {
     return STUDY_NOTES.filter((note) => {
       const matchesTopic = selectedTopic === "All" || note.topic.toLowerCase() === selectedTopic.toLowerCase();
@@ -973,81 +946,63 @@ export default function NotesHub({
   };
 
   return (
-    <div className="notes-hub-container space-y-6">
+    <div className="notes-hub-container">
       {/* Top Hero Banner */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-[#172321] via-[#10302b] to-[#0d211e] rounded-3xl p-6 md:p-8 text-white shadow-xl border border-[#c8f169]/20">
-        <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-          <div className="max-w-2xl space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0f7770]/40 border border-[#c8f169]/30 text-[#c8f169] text-xs font-bold uppercase tracking-wider">
+      <div className="notes-hero">
+        <div className="notes-hero-content">
+          <div style={{ maxWidth: "620px" }}>
+            <div className="notes-hero-kicker">
               <Sparkles size={13} />
-              Open Source & Canonical Textbook Knowledge Base
+              Open Source &amp; Canonical Textbook Knowledge Base
             </div>
-            <h1 className="text-2xl md:text-4xl font-black tracking-tight text-white">
-              Notes &amp; Study Hub
-            </h1>
-            <p className="text-xs md:text-sm text-gray-300 leading-relaxed">
-              Curated from <strong className="text-[#c8f169]">GeeksforGeeks</strong>,{" "}
-              <strong className="text-[#c8f169]">CLRS</strong>, and{" "}
-              <strong className="text-[#c8f169]">Grokking Algorithms</strong> with YouTube masterclasses and 
-              real-time synchronization with your <span className="underline decoration-[#c8f169] decoration-2">Learning Digital Twin</span>.
+            <h1>Notes &amp; Study Hub</h1>
+            <p>
+              Curated from <strong style={{ color: "var(--mint)" }}>GeeksforGeeks</strong>,{" "}
+              <strong style={{ color: "var(--mint)" }}>CLRS</strong>, and{" "}
+              <strong style={{ color: "var(--mint)" }}>Grokking Algorithms</strong> with YouTube masterclasses and 
+              real-time synchronization with your Learning Digital Twin.
             </p>
 
-            {/* Micro Stats Bar */}
-            <div className="flex flex-wrap items-center gap-4 pt-2 text-xs text-gray-300">
-              <span className="flex items-center gap-1.5">
-                <BookOpen size={14} className="text-[#c8f169]" />
+            <div className="notes-hero-stats">
+              <span className="notes-hero-stat-item">
+                <BookOpen size={14} color="var(--mint)" />
                 <strong>7</strong> Comprehensive Modules
               </span>
-              <span className="text-gray-600">•</span>
-              <span className="flex items-center gap-1.5">
-                <Youtube size={14} className="text-rose-400" />
-                <strong>7</strong> Video Lectures
+              <span style={{ opacity: 0.4 }}>•</span>
+              <span className="notes-hero-stat-item">
+                <Youtube size={14} color="#ff6b6b" />
+                <strong>7</strong> Verified YouTube Lectures
               </span>
-              <span className="text-gray-600">•</span>
-              <span className="flex items-center gap-1.5">
-                <GraduationCap size={14} className="text-amber-300" />
-                CLRS &amp; GFG Canonical References
+              <span style={{ opacity: 0.4 }}>•</span>
+              <span className="notes-hero-stat-item">
+                <GraduationCap size={14} color="#ffd43b" />
+                CLRS &amp; GFG Citations
               </span>
             </div>
           </div>
 
-          {/* Action & View Mode Toggles */}
-          <div className="flex flex-row lg:flex-col items-center lg:items-end gap-3 self-start lg:self-center">
-            {/* View Mode Toggle */}
-            <div className="bg-white/10 backdrop-blur-md p-1 rounded-xl flex items-center border border-white/10 text-xs">
+          <div className="notes-hero-actions">
+            <div className="notes-view-mode-wrap">
               <button
                 onClick={() => setViewMode("grid")}
-                className={`px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 transition ${
-                  viewMode === "grid"
-                    ? "bg-[#0f7770] text-white shadow-sm"
-                    : "text-gray-300 hover:text-white"
-                }`}
+                className={`notes-mode-btn ${viewMode === "grid" ? "active" : ""}`}
               >
                 <Layers size={13} /> Grid Guides
               </button>
               <button
                 onClick={() => setViewMode("flashcards")}
-                className={`px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 transition ${
-                  viewMode === "flashcards"
-                    ? "bg-[#0f7770] text-white shadow-sm"
-                    : "text-gray-300 hover:text-white"
-                }`}
+                className={`notes-mode-btn ${viewMode === "flashcards" ? "active" : ""}`}
               >
                 <Zap size={13} /> Flashcards Mode
               </button>
             </div>
 
-            {/* Bookmark Filter */}
             <button
               type="button"
               onClick={() => setBookmarkedOnly(!bookmarkedOnly)}
-              className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition border ${
-                bookmarkedOnly
-                  ? "bg-[#c8f169] text-[#172321] border-[#c8f169]"
-                  : "bg-white/10 text-white border-white/20 hover:bg-white/20"
-              }`}
+              className={`notes-bookmark-filter-btn ${bookmarkedOnly ? "active" : ""}`}
             >
-              <Bookmark size={14} className={bookmarkedOnly ? "fill-[#172321]" : ""} />
+              <Bookmark size={14} className={bookmarkedOnly ? "fill-ink" : ""} />
               Bookmarked ({bookmarks.length})
             </button>
           </div>
@@ -1055,29 +1010,24 @@ export default function NotesHub({
       </div>
 
       {/* Top Filter & Search Bar */}
-      <div className="bg-white/90 backdrop-blur-md rounded-2xl p-4 border border-gray-200/90 shadow-sm space-y-3">
-        <div className="relative w-full">
-          <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+      <div className="notes-filter-bar">
+        <div className="notes-search-wrapper">
+          <Search size={16} className="notes-search-icon" />
           <input
             type="text"
             placeholder="Search by topic, concept, CLRS book chapter, GFG keywords, code, or video (e.g. 'CLRS', 'memoization', 'NeetCode')..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-10 py-2.5 bg-gray-50/90 border border-gray-200 rounded-xl text-xs text-gray-900 focus:outline-none focus:border-[#0f7770] focus:ring-2 focus:ring-[#0f7770]/10 transition"
           />
           {search && (
-            <button
-              onClick={() => setSearch("")}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 text-xs font-bold"
-            >
+            <button onClick={() => setSearch("")} className="notes-search-clear">
               <X size={14} />
             </button>
           )}
         </div>
 
-        {/* Topic Filter Chips */}
-        <div className="flex flex-wrap items-center gap-1.5 pt-1">
-          <span className="text-xs font-bold text-gray-400 mr-1 flex items-center gap-1">
+        <div className="notes-chips-wrapper">
+          <span className="notes-chips-label">
             <Filter size={12} /> Topics:
           </span>
           {TOPIC_FILTERS.map((t) => {
@@ -1086,11 +1036,7 @@ export default function NotesHub({
               <button
                 key={t}
                 onClick={() => setSelectedTopic(t)}
-                className={`px-3 py-1 rounded-full text-xs transition font-medium ${
-                  isActive
-                    ? "bg-[#0f7770] text-white font-bold shadow-sm"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
+                className={`notes-chip ${isActive ? "active" : ""}`}
               >
                 {t}
               </button>
@@ -1103,10 +1049,10 @@ export default function NotesHub({
       {viewMode === "grid" && (
         <>
           {filteredNotes.length === 0 ? (
-            <div className="bg-white rounded-2xl border border-gray-200 p-12 text-center space-y-3">
-              <BookMarked size={36} className="mx-auto text-gray-300" />
-              <h3 className="font-bold text-gray-800 text-base">No study notes found</h3>
-              <p className="text-xs text-gray-500 max-w-sm mx-auto">
+            <div className="panel" style={{ textAlign: "center", padding: "48px 24px" }}>
+              <BookOpen size={36} color="var(--muted)" style={{ margin: "0 auto 12px" }} />
+              <h3 style={{ fontWeight: 700, color: "var(--ink)", marginBottom: "6px" }}>No study notes found</h3>
+              <p style={{ fontSize: "13px", color: "var(--muted)", maxWidth: "380px", margin: "0 auto 16px" }}>
                 Try loosening your search query or selecting &quot;All&quot; topics to view all available notes.
               </p>
               <button
@@ -1115,13 +1061,14 @@ export default function NotesHub({
                   setSelectedTopic("All");
                   setBookmarkedOnly(false);
                 }}
-                className="text-xs font-bold text-[#0f7770] hover:underline"
+                className="cta"
+                style={{ display: "inline-flex", margin: "0 auto" }}
               >
                 Reset Filters
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            <div className="notes-cards-grid">
               {filteredNotes.map((note) => {
                 const mastery = getTopicMastery(note.topic);
                 const isBookmarked = bookmarks.includes(note.id);
@@ -1131,24 +1078,14 @@ export default function NotesHub({
                   <div
                     key={note.id}
                     onClick={() => openStudyModal(note, "theory")}
-                    className="group bg-white rounded-3xl border border-gray-200/90 p-6 shadow-sm hover:shadow-xl hover:border-[#0f7770]/50 transition-all duration-300 cursor-pointer flex flex-col justify-between relative overflow-hidden"
+                    className="note-card"
                   >
-                    {/* Card Top Pill Row */}
                     <div>
-                      <div className="flex items-start justify-between gap-2 mb-3">
-                        <div className="flex flex-wrap items-center gap-1.5">
-                          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#0f7770]/10 text-[#0f7770]">
-                            {note.topic}
-                          </span>
-                          <span
-                            className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                              isWeak
-                                ? "bg-rose-100 text-rose-800"
-                                : mastery >= 80
-                                ? "bg-emerald-100 text-emerald-800"
-                                : "bg-amber-100 text-amber-800"
-                            }`}
-                          >
+                      {/* Top Badges */}
+                      <div className="note-card-badges">
+                        <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", alignItems: "center" }}>
+                          <span className="note-tag note-tag-topic">{note.topic}</span>
+                          <span className={`note-tag note-tag-mastery ${isWeak ? "weak" : mastery >= 80 ? "" : "mid"}`}>
                             Twin {mastery}%
                           </span>
                         </div>
@@ -1157,73 +1094,63 @@ export default function NotesHub({
                           type="button"
                           title={isBookmarked ? "Remove Bookmark" : "Save Bookmark"}
                           onClick={(e) => toggleBookmark(note.id, e)}
-                          className={`p-1.5 rounded-lg border text-gray-400 hover:text-gray-800 transition ${
-                            isBookmarked
-                              ? "bg-amber-50 border-amber-200 text-amber-600"
-                              : "bg-gray-50 border-gray-100"
-                          }`}
+                          className={`note-bookmark-btn ${isBookmarked ? "saved" : ""}`}
                         >
-                          <Bookmark size={13} className={isBookmarked ? "fill-amber-500" : ""} />
+                          <Bookmark size={13} className={isBookmarked ? "fill-amber" : ""} />
                         </button>
                       </div>
 
                       {/* Reference Badge Row */}
-                      <div className="flex flex-wrap items-center gap-2 mb-2 text-[10px] text-gray-500">
-                        <span className="inline-flex items-center gap-1 bg-gray-50 px-2 py-0.5 rounded-md border border-gray-100 font-medium">
-                          <BookOpen size={10} className="text-[#0f7770]" />
+                      <div className="note-meta-badges">
+                        <span className="note-ref-pill">
+                          <BookOpen size={10} color="var(--teal)" />
                           {note.openSourceRef.bookTitle.split(" ")[0]} {note.openSourceRef.bookChapter.split(":")[0]}
                         </span>
-                        <span className="inline-flex items-center gap-1 bg-rose-50 text-rose-700 px-2 py-0.5 rounded-md border border-rose-100 font-medium">
+                        <span className="note-video-pill">
                           <Youtube size={10} />
                           {note.videoResource.channel} ({note.videoResource.duration})
                         </span>
                       </div>
 
                       {/* Title */}
-                      <h2 className="font-bold text-gray-900 text-base leading-snug group-hover:text-[#0f7770] transition-colors mb-3">
-                        {note.title}
-                      </h2>
+                      <h3 className="note-card-title">{note.title}</h3>
 
                       {/* Bullet Highlights */}
-                      <ul className="space-y-1.5 mb-4">
+                      <ul className="note-bullets-list">
                         {note.summary.slice(0, 3).map((bullet, i) => (
-                          <li key={i} className="text-xs text-gray-600 flex items-start gap-2 leading-relaxed">
-                            <CheckCircle2 size={13} className="text-[#0f7770] flex-shrink-0 mt-0.5" />
+                          <li key={i} className="note-bullet-item">
+                            <CheckCircle2 size={13} className="note-bullet-icon" />
                             <span>{bullet}</span>
                           </li>
                         ))}
                       </ul>
 
-                      {/* Mini ASCII Diagram Preview */}
+                      {/* Diagram Preview */}
                       {note.diagramAscii && (
-                        <div className="bg-[#172321] text-[#c8f169] rounded-xl p-3 font-mono text-[10px] leading-relaxed overflow-x-auto whitespace-pre my-3 shadow-inner">
-                          {note.diagramAscii.split("\n").slice(0, 5).join("\n")}
-                          {note.diagramAscii.split("\n").length > 5 && "\n..."}
+                        <div className="note-diagram-preview">
+                          {note.diagramAscii.split("\n").slice(0, 4).join("\n")}
+                          {note.diagramAscii.split("\n").length > 4 && "\n..."}
                         </div>
                       )}
                     </div>
 
-                    {/* Bottom Action Footer */}
-                    <div className="pt-4 border-t border-gray-100 space-y-3">
-                      <div className="flex items-center justify-between text-xs text-gray-500">
-                        <span className="flex items-center gap-1 text-[11px]">
-                          ⏱ {note.readingTime} · {note.difficulty}
-                        </span>
-                        <span className="text-[11px] font-mono font-bold text-gray-700">
-                          {note.complexity.time}
-                        </span>
+                    {/* Footer */}
+                    <div className="note-card-footer">
+                      <div className="note-card-info-row">
+                        <span>⏱ {note.readingTime} · {note.difficulty}</span>
+                        <span className="note-complexity-badge">{note.complexity.time}</span>
                       </div>
 
-                      <div className="flex items-center gap-2">
+                      <div className="note-card-actions">
                         <button
                           type="button"
                           onClick={(e) => {
                             e.stopPropagation();
                             openStudyModal(note, "video");
                           }}
-                          className="flex-1 py-2 px-3 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-bold transition flex items-center justify-center gap-1.5"
+                          className="note-action-btn secondary"
                         >
-                          <Play size={12} className="fill-rose-700" /> Watch Video
+                          <Play size={12} fill="currentColor" /> Watch Video
                         </button>
                         <button
                           type="button"
@@ -1231,7 +1158,7 @@ export default function NotesHub({
                             e.stopPropagation();
                             openStudyModal(note, "theory");
                           }}
-                          className="flex-1 py-2 px-3 rounded-xl bg-[#0f7770] hover:bg-[#0b5c56] text-white text-xs font-bold transition flex items-center justify-center gap-1"
+                          className="note-action-btn primary"
                         >
                           Study Guide <ArrowRight size={13} />
                         </button>
@@ -1247,80 +1174,74 @@ export default function NotesHub({
 
       {/* VIEW MODE 2: FLASHCARD REVISION MODE */}
       {viewMode === "flashcards" && (
-        <div className="space-y-4">
-          <div className="bg-amber-50/80 border border-amber-200/80 rounded-2xl p-4 flex items-center justify-between text-xs text-amber-900">
-            <div className="flex items-center gap-2">
-              <Zap size={16} className="text-amber-600" />
+        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+          <div className="notes-analogy-box" style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <Zap size={16} color="#d48806" />
               <span>
-                <strong>Quick Revision Mode:</strong> Click any card to flip between the high-yield interview prompt and core invariant!
+                <strong>Quick Revision Mode:</strong> Click any card to flip between the high-yield interview challenge and core invariant!
               </span>
             </div>
-            <span className="font-bold">{filteredNotes.length} flashcards ready</span>
+            <strong>{filteredNotes.length} flashcards ready</strong>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          <div className="flashcard-grid">
             {filteredNotes.map((note) => {
               const isFlipped = flippedCards[note.id];
               return (
                 <div
                   key={note.id}
                   onClick={() => toggleCardFlip(note.id)}
-                  className="perspective-1000 min-h-[300px] cursor-pointer"
+                  className="flashcard-wrap"
                 >
-                  <div
-                    className={`flashcard-inner relative w-full h-full min-h-[300px] rounded-3xl p-6 shadow-md transition-all duration-500 border ${
-                      isFlipped
-                        ? "bg-[#172321] text-white border-[#c8f169]/40"
-                        : "bg-white text-gray-900 border-gray-200 hover:border-[#0f7770]/50"
-                    }`}
-                  >
+                  <div className={`flashcard-card ${isFlipped ? "flipped" : ""}`}>
                     {!isFlipped ? (
-                      /* Flashcard Front */
-                      <div className="flex flex-col justify-between h-full space-y-4">
+                      /* Front */
+                      <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", height: "100%" }}>
                         <div>
-                          <div className="flex items-center justify-between mb-3">
-                            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#0f7770]/10 text-[#0f7770]">
-                              {note.topic}
-                            </span>
-                            <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
+                            <span className="note-tag note-tag-topic">{note.topic}</span>
+                            <span style={{ fontSize: "10px", color: "var(--muted)", fontWeight: 700, textTransform: "uppercase" }}>
                               Flashcard • Front
                             </span>
                           </div>
-                          <span className="text-xs font-bold text-gray-400 uppercase">Interview Challenge:</span>
-                          <h3 className="text-base font-bold text-gray-900 mt-2 leading-relaxed">
+                          <span style={{ fontSize: "11px", fontWeight: 700, color: "var(--muted)", textTransform: "uppercase" }}>
+                            Interview Challenge:
+                          </span>
+                          <h3 style={{ fontSize: "15px", fontWeight: 700, color: "var(--ink)", marginTop: "8px", lineHeight: 1.45 }}>
                             {note.flashcard.prompt}
                           </h3>
                         </div>
 
-                        <div className="pt-4 border-t border-gray-100 flex items-center justify-between text-xs text-gray-400">
-                          <span className="text-[#0f7770] font-bold flex items-center gap-1">
+                        <div style={{ borderTop: "1px solid var(--line)", paddingTop: "12px", display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "12px" }}>
+                          <span style={{ color: "var(--teal)", fontWeight: 700, display: "inline-flex", alignItems: "center", gap: "4px" }}>
                             <RotateCcw size={12} /> Click to Reveal Answer
                           </span>
-                          <span className="font-mono">{note.complexity.time}</span>
+                          <span style={{ fontFamily: "monospace", color: "var(--muted)" }}>{note.complexity.time}</span>
                         </div>
                       </div>
                     ) : (
-                      /* Flashcard Back */
-                      <div className="flex flex-col justify-between h-full space-y-4">
+                      /* Back */
+                      <div className="flashcard-flipped-inner">
                         <div>
-                          <div className="flex items-center justify-between mb-2">
-                            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#c8f169] text-[#172321]">
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
+                            <span style={{ background: "var(--mint)", color: "var(--ink)", padding: "2px 8px", borderRadius: "12px", fontSize: "10px", fontWeight: 700 }}>
                               Core Takeaway
                             </span>
-                            <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+                            <span style={{ fontSize: "10px", color: "#8fa199", fontWeight: 700, textTransform: "uppercase" }}>
                               Flashcard • Back
                             </span>
                           </div>
-                          <p className="text-xs text-gray-200 leading-relaxed whitespace-pre-line mt-2">
+                          <p style={{ fontSize: "12px", color: "#e4eee9", lineHeight: 1.6, whiteSpace: "pre-line", margin: 0 }}>
                             {note.flashcard.answer}
                           </p>
-                          <div className="mt-3 p-3 bg-white/5 rounded-xl border border-white/10 text-[11px] text-[#c8f169]">
+                          <div style={{ marginTop: "12px", padding: "10px 12px", background: "rgba(255,255,255,0.06)", borderRadius: "10px", border: "1px solid rgba(255,255,255,0.1)", fontSize: "11px", color: "var(--mint)" }}>
                             <strong>Rule of Thumb:</strong> {note.flashcard.keyTakeaway}
                           </div>
                         </div>
 
-                        <div className="pt-3 border-t border-white/10 flex items-center justify-between text-xs">
-                          <span className="text-gray-400 flex items-center gap-1 text-[11px]">
+                        <div style={{ borderTop: "1px solid rgba(255,255,255,0.1)", paddingTop: "12px", display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "12px" }}>
+                          <span style={{ color: "#8fa199", display: "inline-flex", alignItems: "center", gap: "4px", fontSize: "11px" }}>
                             <RotateCcw size={11} /> Flip Back
                           </span>
                           <button
@@ -1328,7 +1249,7 @@ export default function NotesHub({
                               e.stopPropagation();
                               openStudyModal(note, "theory");
                             }}
-                            className="text-[#c8f169] font-bold hover:underline text-xs"
+                            style={{ border: 0, background: "transparent", color: "var(--mint)", fontWeight: 700, cursor: "pointer", fontSize: "12px" }}
                           >
                             Full Guide →
                           </button>
@@ -1345,52 +1266,38 @@ export default function NotesHub({
 
       {/* DETAIL STUDY MODAL / DRAWER */}
       {activeNote && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-3 md:p-6 bg-black/60 backdrop-blur-sm animate-fadeIn"
-          onClick={() => setActiveNote(null)}
-        >
-          <div
-            className="bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-gray-200 relative flex flex-col"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Modal Header */}
-            <div className="p-6 md:p-8 pb-4 border-b border-gray-100 bg-gradient-to-r from-gray-50/80 to-white sticky top-0 z-20 backdrop-blur-md">
-              <div className="flex items-start justify-between gap-4">
-                <div className="space-y-1.5">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#0f7770]/10 text-[#0f7770]">
-                      {activeNote.topic}
-                    </span>
-                    <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-gray-100 text-gray-700">
+        <div className="notes-modal-backdrop" onClick={() => setActiveNote(null)}>
+          <div className="notes-modal-card" onClick={(e) => e.stopPropagation()}>
+            {/* Header */}
+            <div className="notes-modal-header">
+              <div className="notes-modal-header-top">
+                <div>
+                  <div style={{ display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap", marginBottom: "6px" }}>
+                    <span className="note-tag note-tag-topic">{activeNote.topic}</span>
+                    <span style={{ background: "#edf3ee", color: "var(--ink)", padding: "2px 8px", borderRadius: "12px", fontSize: "11px", fontWeight: 700 }}>
                       {activeNote.difficulty}
                     </span>
-                    <span className="text-xs text-gray-400">• {activeNote.readingTime}</span>
-                    <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
+                    <span style={{ fontSize: "12px", color: "var(--muted)" }}>• {activeNote.readingTime}</span>
+                    <span className="note-tag note-tag-mastery">
                       Twin Mastery {getTopicMastery(activeNote.topic)}%
                     </span>
                   </div>
-                  <h2 className="text-xl md:text-2xl font-black text-gray-900 leading-tight">
-                    {activeNote.title}
-                  </h2>
+                  <h2 className="notes-modal-title">{activeNote.title}</h2>
                 </div>
 
-                <div className="flex items-center gap-2 flex-shrink-0">
+                <div style={{ display: "flex", gap: "8px", flexShrink: 0 }}>
                   <button
                     type="button"
                     onClick={() => toggleBookmark(activeNote.id)}
-                    className={`p-2 rounded-xl border text-xs font-bold transition ${
-                      bookmarks.includes(activeNote.id)
-                        ? "bg-amber-50 border-amber-200 text-amber-600"
-                        : "bg-gray-100 text-gray-600 hover:bg-gray-200 border-gray-200"
-                    }`}
+                    className={`note-bookmark-btn ${bookmarks.includes(activeNote.id) ? "saved" : ""}`}
                     title="Bookmark Note"
                   >
-                    <Bookmark size={15} className={bookmarks.includes(activeNote.id) ? "fill-amber-500" : ""} />
+                    <Bookmark size={15} className={bookmarks.includes(activeNote.id) ? "fill-amber" : ""} />
                   </button>
                   <button
                     type="button"
                     onClick={() => setActiveNote(null)}
-                    className="p-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-600 transition"
+                    className="note-bookmark-btn"
                     title="Close"
                   >
                     <X size={16} />
@@ -1398,101 +1305,76 @@ export default function NotesHub({
                 </div>
               </div>
 
-              {/* Navigation Tabs Inside Modal */}
-              <div className="flex items-center gap-2 mt-5 border-b border-gray-200 overflow-x-auto text-xs font-bold">
+              {/* Tabs */}
+              <div className="notes-modal-tabs">
                 <button
                   onClick={() => setModalTab("theory")}
-                  className={`pb-2.5 px-3 border-b-2 transition flex items-center gap-1.5 whitespace-nowrap ${
-                    modalTab === "theory"
-                      ? "border-[#0f7770] text-[#0f7770]"
-                      : "border-transparent text-gray-500 hover:text-gray-800"
-                  }`}
+                  className={`notes-tab-btn ${modalTab === "theory" ? "active" : ""}`}
                 >
                   <BookOpen size={14} /> Theory &amp; Books
                 </button>
                 <button
                   onClick={() => setModalTab("code")}
-                  className={`pb-2.5 px-3 border-b-2 transition flex items-center gap-1.5 whitespace-nowrap ${
-                    modalTab === "code"
-                      ? "border-[#0f7770] text-[#0f7770]"
-                      : "border-transparent text-gray-500 hover:text-gray-800"
-                  }`}
+                  className={`notes-tab-btn ${modalTab === "code" ? "active" : ""}`}
                 >
                   <Code2 size={14} /> Python Code &amp; Complexity
                 </button>
                 <button
                   onClick={() => setModalTab("video")}
-                  className={`pb-2.5 px-3 border-b-2 transition flex items-center gap-1.5 whitespace-nowrap ${
-                    modalTab === "video"
-                      ? "border-rose-500 text-rose-600"
-                      : "border-transparent text-gray-500 hover:text-gray-800"
-                  }`}
+                  className={`notes-tab-btn video ${modalTab === "video" ? "active" : ""}`}
                 >
-                  <Youtube size={14} className="text-rose-500" /> Video Lecture
+                  <Youtube size={14} color="#e03131" /> Video Lecture
                 </button>
                 <button
                   onClick={() => setModalTab("practice")}
-                  className={`pb-2.5 px-3 border-b-2 transition flex items-center gap-1.5 whitespace-nowrap ${
-                    modalTab === "practice"
-                      ? "border-emerald-600 text-emerald-700"
-                      : "border-transparent text-gray-500 hover:text-gray-800"
-                  }`}
+                  className={`notes-tab-btn ${modalTab === "practice" ? "active" : ""}`}
                 >
-                  <Zap size={14} className="text-amber-500" /> Practice &amp; Pitfalls
+                  <Zap size={14} color="#d48806" /> Practice &amp; Pitfalls
                 </button>
               </div>
             </div>
 
-            {/* Modal Body Content */}
-            <div className="p-6 md:p-8 space-y-6 flex-1">
-              {/* TAB 1: THEORY & BOOKS */}
+            {/* Modal Body */}
+            <div className="notes-modal-body">
+              {/* TAB 1: THEORY */}
               {modalTab === "theory" && (
-                <div className="space-y-6 animate-fadeIn">
-                  {/* Real World Analogy Callout */}
-                  <div className="p-4 rounded-2xl bg-amber-50/70 border border-amber-200/80 space-y-1">
-                    <div className="flex items-center gap-2 text-xs font-bold text-amber-900 uppercase tracking-wider">
-                      💡 Intuitive Analogy
-                    </div>
-                    <p className="text-xs text-amber-950 leading-relaxed">
-                      {activeNote.deepDive.realWorldAnalogy}
-                    </p>
+                <>
+                  <div className="notes-analogy-box">
+                    <strong>💡 Intuitive Analogy:</strong> {activeNote.deepDive.realWorldAnalogy}
                   </div>
 
-                  {/* Core Intuition */}
-                  <div className="space-y-2">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-gray-400">
-                      Conceptual Deep Dive
-                    </h4>
-                    <p className="text-xs md:text-sm text-gray-700 leading-relaxed">
+                  <div>
+                    <div className="kicker" style={{ marginBottom: "6px" }}>Conceptual Deep Dive</div>
+                    <p style={{ fontSize: "13px", color: "var(--ink)", lineHeight: 1.6, margin: 0 }}>
                       {activeNote.deepDive.intuition}
                     </p>
                   </div>
 
-                  {/* Canonical Textbook Quote Box (CLRS) */}
-                  <div className="p-5 rounded-2xl bg-gradient-to-br from-gray-900 to-[#172321] text-white space-y-3 shadow-md border border-gray-800">
-                    <div className="flex items-center justify-between text-xs text-gray-400">
-                      <span className="flex items-center gap-1.5 font-bold text-[#c8f169]">
-                        <BookOpen size={14} /> Textbook Foundation
+                  {/* Textbook Quote */}
+                  <div className="notes-quote-box">
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "12px" }}>
+                      <span style={{ color: "var(--mint)", fontWeight: 700, display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                        <BookOpen size={14} /> Canonical Textbook Foundation
                       </span>
-                      <span className="font-mono text-[11px] text-gray-300">
+                      <span style={{ color: "#a9bcb3", fontFamily: "monospace", fontSize: "11px" }}>
                         {activeNote.openSourceRef.bookTitle} · {activeNote.openSourceRef.bookChapter}
                       </span>
                     </div>
-                    <blockquote className="italic text-xs md:text-sm text-gray-200 leading-relaxed border-l-2 border-[#c8f169] pl-3 my-2">
+                    <blockquote>
                       &quot;{activeNote.openSourceRef.keyQuote}&quot;
                     </blockquote>
-                    <div className="text-[11px] text-gray-400">
+                    <div style={{ fontSize: "11px", color: "#a9bcb3" }}>
                       — {activeNote.openSourceRef.bookAuthor}
                     </div>
                   </div>
 
-                  {/* GeeksforGeeks Citation Card */}
-                  <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <div className="space-y-0.5">
-                      <span className="text-[10px] uppercase font-bold text-emerald-800 tracking-wider">
+                  {/* GeeksforGeeks Citation */}
+                  <div className="notes-gfg-box">
+                    <div>
+                      <span style={{ fontSize: "10px", textTransform: "uppercase", fontWeight: 700, color: "#1e7e34" }}>
                         GeeksforGeeks Canonical Article
                       </span>
-                      <div className="text-xs font-bold text-emerald-950">
+                      <div style={{ fontSize: "13px", fontWeight: 700, color: "#145223" }}>
                         {activeNote.openSourceRef.gfgTitle}
                       </div>
                     </div>
@@ -1500,41 +1382,37 @@ export default function NotesHub({
                       href={activeNote.openSourceRef.gfgUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-3.5 py-1.5 rounded-xl bg-[#0f7770] hover:bg-[#09544f] text-white text-xs font-bold transition flex items-center gap-1.5 self-start sm:self-auto"
+                      className="cta"
+                      style={{ padding: "7px 14px", fontSize: "12px", display: "inline-flex", alignItems: "center", gap: "6px" }}
                     >
                       Read on GFG <ExternalLink size={12} />
                     </a>
                   </div>
 
-                  {/* Core Definitions */}
-                  <div className="space-y-3">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-gray-400">
-                      Key Formal Definitions
-                    </h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {/* Definitions */}
+                  <div>
+                    <div className="kicker" style={{ marginBottom: "10px" }}>Key Formal Definitions</div>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "10px" }}>
                       {activeNote.deepDive.definitions.map((def, idx) => (
-                        <div key={idx} className="p-4 rounded-2xl bg-gray-50 border border-gray-200 space-y-1">
-                          <div className="text-xs font-bold text-gray-900">{def.term}</div>
-                          <div className="text-xs text-gray-600 leading-relaxed">{def.explanation}</div>
+                        <div key={idx} style={{ background: "#f8faf7", border: "1px solid var(--line)", borderRadius: "12px", padding: "12px 14px" }}>
+                          <div style={{ fontSize: "12px", fontWeight: 700, color: "var(--ink)", marginBottom: "4px" }}>{def.term}</div>
+                          <div style={{ fontSize: "12px", color: "var(--muted)", lineHeight: 1.5 }}>{def.explanation}</div>
                         </div>
                       ))}
                     </div>
                   </div>
-                </div>
+                </>
               )}
 
-              {/* TAB 2: PYTHON CODE & COMPLEXITY */}
+              {/* TAB 2: CODE */}
               {modalTab === "code" && (
-                <div className="space-y-6 animate-fadeIn">
-                  {/* Code Container */}
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <h4 className="text-xs font-bold uppercase tracking-wider text-gray-400">
-                        Python 3 Canonical Implementation
-                      </h4>
+                <>
+                  <div>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
+                      <span className="kicker">Python 3 Canonical Implementation</span>
                       <button
                         onClick={(e) => copyCode(activeNote.codeSnippet.code, activeNote.id, e)}
-                        className="text-xs font-bold text-[#0f7770] hover:text-[#0b5c56] flex items-center gap-1 transition"
+                        style={{ border: 0, background: "transparent", color: "var(--teal)", fontWeight: 700, fontSize: "12px", cursor: "pointer", display: "inline-flex", alignItems: "center", gap: "4px" }}
                       >
                         {copiedCodeId === activeNote.id ? (
                           <>
@@ -1548,221 +1426,175 @@ export default function NotesHub({
                       </button>
                     </div>
 
-                    <div className="relative group bg-gray-950 rounded-2xl overflow-hidden border border-gray-800 shadow-xl">
-                      <div className="flex items-center justify-between px-4 py-2 bg-gray-900 border-b border-gray-800 text-xs text-gray-400 font-mono">
+                    <div className="notes-code-container">
+                      <div className="notes-code-header">
                         <span>solution.py</span>
-                        <span className="text-emerald-400 font-bold">Python 3</span>
+                        <span style={{ color: "var(--mint)", fontWeight: 700 }}>Python 3</span>
                       </div>
-                      <pre className="p-5 font-mono text-xs text-emerald-300 overflow-x-auto leading-relaxed whitespace-pre">
+                      <pre className="notes-code-pre">
                         {activeNote.codeSnippet.code}
                       </pre>
                     </div>
-                    <p className="text-xs text-gray-500 italic mt-1">
+                    <p style={{ fontSize: "12px", color: "var(--muted)", marginTop: "6px", fontStyle: "italic" }}>
                       {activeNote.codeSnippet.explanation}
                     </p>
                   </div>
 
-                  {/* Complexity Metric Cards */}
-                  <div className="space-y-2">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-gray-400">
-                      Asymptotic Complexity Analysis
-                    </h4>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div className="p-4 rounded-2xl bg-gray-50 border border-gray-200 space-y-1">
-                        <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-                          Time Complexity
-                        </div>
-                        <div className="text-xl font-black font-mono text-gray-900">
+                  <div>
+                    <div className="kicker" style={{ marginBottom: "10px" }}>Asymptotic Complexity Analysis</div>
+                    <div className="notes-complexity-grid">
+                      <div className="notes-complexity-card">
+                        <span style={{ fontSize: "10px", fontWeight: 700, textTransform: "uppercase", color: "var(--muted)" }}>Time Complexity</span>
+                        <div style={{ fontSize: "20px", fontWeight: 800, fontFamily: "monospace", color: "var(--ink)", margin: "4px 0" }}>
                           {activeNote.complexity.time}
                         </div>
-                        <div className="text-xs text-gray-600 leading-relaxed">
-                          {activeNote.complexity.timeDetails}
-                        </div>
+                        <div style={{ fontSize: "12px", color: "var(--muted)", lineHeight: 1.5 }}>{activeNote.complexity.timeDetails}</div>
                       </div>
 
-                      <div className="p-4 rounded-2xl bg-gray-50 border border-gray-200 space-y-1">
-                        <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-                          Space Complexity
-                        </div>
-                        <div className="text-xl font-black font-mono text-gray-900">
+                      <div className="notes-complexity-card">
+                        <span style={{ fontSize: "10px", fontWeight: 700, textTransform: "uppercase", color: "var(--muted)" }}>Space Complexity</span>
+                        <div style={{ fontSize: "20px", fontWeight: 800, fontFamily: "monospace", color: "var(--ink)", margin: "4px 0" }}>
                           {activeNote.complexity.space}
                         </div>
-                        <div className="text-xs text-gray-600 leading-relaxed">
-                          {activeNote.complexity.spaceDetails}
-                        </div>
+                        <div style={{ fontSize: "12px", color: "var(--muted)", lineHeight: 1.5 }}>{activeNote.complexity.spaceDetails}</div>
                       </div>
                     </div>
                   </div>
 
-                  {/* Architecture Diagram */}
                   {activeNote.diagramAscii && (
-                    <div className="space-y-2">
-                      <h4 className="text-xs font-bold uppercase tracking-wider text-gray-400">
-                        Memory &amp; Pointer Architecture
-                      </h4>
-                      <div className="bg-[#172321] text-[#c8f169] rounded-2xl p-4 font-mono text-xs overflow-x-auto whitespace-pre leading-relaxed shadow-inner">
+                    <div>
+                      <div className="kicker" style={{ marginBottom: "8px" }}>Memory &amp; Pointer Architecture</div>
+                      <div className="notes-code-pre" style={{ background: "#172321", borderRadius: "12px" }}>
                         {activeNote.diagramAscii}
                       </div>
                     </div>
                   )}
-                </div>
+                </>
               )}
 
-              {/* TAB 3: VIDEO LECTURE */}
+              {/* TAB 3: VIDEO */}
               {modalTab === "video" && (
-                <div className="space-y-6 animate-fadeIn">
-                  {/* YouTube Player */}
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <span className="text-[10px] font-bold text-rose-600 uppercase tracking-wider flex items-center gap-1">
-                          <Youtube size={13} /> Recommended Masterclass
-                        </span>
-                        <h3 className="text-base font-bold text-gray-900">
-                          {activeNote.videoResource.title}
-                        </h3>
-                      </div>
-                      <a
-                        href={activeNote.videoResource.youtubeUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition flex items-center gap-1.5 flex-shrink-0"
-                      >
-                        Watch on YouTube <ExternalLink size={12} />
-                      </a>
+                <>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "8px" }}>
+                    <div>
+                      <span style={{ fontSize: "10px", fontWeight: 700, textTransform: "uppercase", color: "#e03131", display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                        <Youtube size={13} /> Verified YouTube Masterclass
+                      </span>
+                      <h3 style={{ fontSize: "16px", fontWeight: 800, color: "var(--ink)", margin: "2px 0 0" }}>
+                        {activeNote.videoResource.title}
+                      </h3>
                     </div>
 
-                    {/* Responsive Video Iframe Container */}
-                    <div className="relative w-full aspect-video rounded-2xl overflow-hidden border border-gray-200 shadow-lg bg-black">
-                      <iframe
-                        src={`https://www.youtube-nocookie.com/embed/${activeNote.videoResource.youtubeEmbedId}`}
-                        title={activeNote.videoResource.title}
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                        className="absolute inset-0 w-full h-full"
-                      />
-                    </div>
-
-                    {/* Video Metadata Card */}
-                    <div className="p-4 rounded-2xl bg-gray-50 border border-gray-200 flex items-center justify-between text-xs text-gray-700">
-                      <div className="flex items-center gap-3">
-                        <span className="font-bold text-gray-900">
-                          Instructor: {activeNote.videoResource.channel}
-                        </span>
-                        <span>•</span>
-                        <span>Duration: {activeNote.videoResource.duration}</span>
-                      </div>
-                      <span className="text-[#0f7770] font-bold">Curated for Digital Twin</span>
-                    </div>
-
-                    <p className="text-xs text-gray-600 leading-relaxed">
-                      💡 <strong>What you will master:</strong> {activeNote.videoResource.highlight}
-                    </p>
+                    <a
+                      href={activeNote.videoResource.youtubeUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="cta"
+                      style={{ background: "#e03131", color: "white", padding: "7px 14px", fontSize: "12px", display: "inline-flex", alignItems: "center", gap: "6px" }}
+                    >
+                      Watch on YouTube <ExternalLink size={12} />
+                    </a>
                   </div>
-                </div>
+
+                  {/* Responsive Iframe Container */}
+                  <div className="notes-video-wrap">
+                    <iframe
+                      src={`https://www.youtube-nocookie.com/embed/${activeNote.videoResource.youtubeEmbedId}`}
+                      title={activeNote.videoResource.title}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  </div>
+
+                  <div style={{ background: "#f8faf7", border: "1px solid var(--line)", borderRadius: "12px", padding: "12px 16px", display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "12px" }}>
+                    <div>
+                      <strong>Instructor:</strong> {activeNote.videoResource.channel} · <strong>Duration:</strong> {activeNote.videoResource.duration}
+                    </div>
+                    <span style={{ color: "var(--teal)", fontWeight: 700 }}>Verified &amp; Available</span>
+                  </div>
+
+                  <p style={{ fontSize: "12px", color: "var(--muted)", lineHeight: 1.6, margin: 0 }}>
+                    💡 <strong>What you will master:</strong> {activeNote.videoResource.highlight}
+                  </p>
+                </>
               )}
 
-              {/* TAB 4: PRACTICE & PITFALLS */}
+              {/* TAB 4: PRACTICE */}
               {modalTab === "practice" && (
-                <div className="space-y-6 animate-fadeIn">
-                  {/* Curated Practice Problems */}
-                  <div className="space-y-3">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-gray-400">
-                      Standard GeeksforGeeks &amp; LeetCode Practice
-                    </h4>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <>
+                  <div>
+                    <div className="kicker" style={{ marginBottom: "10px" }}>Standard GeeksforGeeks &amp; LeetCode Practice</div>
+                    <div className="notes-problems-list">
                       {activeNote.practiceProblems.map((prob, idx) => (
                         <a
                           key={idx}
                           href={prob.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="p-4 rounded-2xl bg-white border border-gray-200 hover:border-[#0f7770] hover:shadow-md transition flex items-center justify-between group"
+                          className="notes-problem-card"
                         >
                           <div>
-                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
-                              {prob.platform}
-                            </span>
-                            <div className="text-xs font-bold text-gray-900 group-hover:text-[#0f7770] transition">
-                              {prob.name}
-                            </div>
+                            <span style={{ fontSize: "10px", fontWeight: 700, color: "var(--muted)", textTransform: "uppercase" }}>{prob.platform}</span>
+                            <div style={{ fontSize: "12px", fontWeight: 700, color: "var(--ink)", marginTop: "2px" }}>{prob.name}</div>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <span
-                              className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                                prob.difficulty === "Easy"
-                                  ? "bg-emerald-100 text-emerald-800"
-                                  : prob.difficulty === "Medium"
-                                  ? "bg-amber-100 text-amber-800"
-                                  : "bg-rose-100 text-rose-800"
-                              }`}
-                            >
+                          <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                            <span className={`note-tag note-tag-mastery ${prob.difficulty === "Easy" ? "" : prob.difficulty === "Medium" ? "mid" : "weak"}`}>
                               {prob.difficulty}
                             </span>
-                            <ExternalLink size={12} className="text-gray-400 group-hover:text-[#0f7770]" />
+                            <ExternalLink size={12} color="var(--muted)" />
                           </div>
                         </a>
                       ))}
                     </div>
                   </div>
 
-                  {/* Common Pitfalls Callouts */}
-                  <div className="space-y-2">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-rose-500">
-                      Common Interview Pitfalls &amp; Gotchas
-                    </h4>
-                    <div className="space-y-2">
+                  <div>
+                    <div className="kicker" style={{ color: "#b02a37", marginBottom: "8px" }}>Common Interview Pitfalls &amp; Traps</div>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                       {activeNote.deepDive.pitfalls.map((pitfall, idx) => (
-                        <div
-                          key={idx}
-                          className="p-3.5 rounded-2xl bg-rose-50/70 border border-rose-100 text-xs text-rose-950 flex items-start gap-2.5"
-                        >
-                          <span className="text-rose-500 font-bold mt-0.5">⚠️</span>
-                          <span className="leading-relaxed">{pitfall}</span>
+                        <div key={idx} className="notes-callout pitfall">
+                          <span style={{ fontWeight: 700 }}>⚠️</span>
+                          <span>{pitfall}</span>
                         </div>
                       ))}
                     </div>
                   </div>
 
-                  {/* Interview Pro Tips */}
-                  <div className="space-y-2">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-emerald-700">
-                      Interview Pro Tips
-                    </h4>
-                    <div className="space-y-2">
+                  <div>
+                    <div className="kicker" style={{ color: "#09544f", marginBottom: "8px" }}>Interview Pro Tips</div>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                       {activeNote.deepDive.interviewTips.map((tip, idx) => (
-                        <div
-                          key={idx}
-                          className="p-3.5 rounded-2xl bg-emerald-50/70 border border-emerald-100 text-xs text-emerald-950 flex items-start gap-2.5"
-                        >
-                          <span className="text-emerald-600 font-bold mt-0.5">✓</span>
-                          <span className="leading-relaxed">{tip}</span>
+                        <div key={idx} className="notes-callout tip">
+                          <span style={{ fontWeight: 700 }}>✓</span>
+                          <span>{tip}</span>
                         </div>
                       ))}
                     </div>
                   </div>
-                </div>
+                </>
               )}
             </div>
 
-            {/* Modal Bottom Action Bar */}
-            <div className="p-6 border-t border-gray-200 bg-gray-50/80 rounded-b-3xl flex flex-wrap items-center justify-between gap-3">
-              <div className="flex items-center gap-2">
+            {/* Modal Footer */}
+            <div className="notes-modal-footer">
+              <div style={{ display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap" }}>
                 <button
                   type="button"
                   onClick={() => {
                     onAskAi(`Explain ${activeNote.topic} from the perspective of an expert software engineer. Discuss key interview patterns, edge cases, and time/space complexity.`);
                     setActiveNote(null);
                   }}
-                  className="px-4 py-2.5 rounded-xl bg-white border border-gray-200 hover:bg-gray-100 text-gray-800 text-xs font-bold transition flex items-center gap-1.5 shadow-sm"
+                  className="icon-button"
+                  style={{ width: "auto", padding: "0 14px", display: "inline-flex", gap: "6px", fontSize: "12px", fontWeight: 700, color: "var(--ink)" }}
                 >
-                  <MessageCircle size={14} className="text-[#0f7770]" />
+                  <MessageCircle size={14} color="var(--teal)" />
                   Ask AI Tutor about this Note
                 </button>
                 <button
                   type="button"
                   onClick={() => window.print()}
-                  className="px-3.5 py-2.5 rounded-xl bg-white border border-gray-200 hover:bg-gray-100 text-gray-700 text-xs font-bold transition flex items-center gap-1.5 shadow-sm"
+                  className="icon-button"
+                  style={{ width: "auto", padding: "0 14px", display: "inline-flex", gap: "6px", fontSize: "12px", fontWeight: 700, color: "var(--muted)" }}
                   title="Print / Save as PDF"
                 >
                   <Printer size={14} />
@@ -1776,7 +1608,8 @@ export default function NotesHub({
                   onOpenQuiz(activeNote.topic);
                   setActiveNote(null);
                 }}
-                className="px-5 py-2.5 rounded-xl bg-[#172321] hover:bg-black text-[#c8f169] text-xs font-bold transition flex items-center gap-2 shadow-md"
+                className="cta"
+                style={{ padding: "9px 18px", fontSize: "12px", display: "inline-flex", alignItems: "center", gap: "6px" }}
               >
                 <Zap size={14} />
                 Practice {activeNote.topic} Quiz Questions →

@@ -87,6 +87,19 @@ export default function Dashboard() {
       window.localStorage.setItem("digiguide-auth", "true");
     }
 
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const tabParam = params.get("tab");
+      if (tabParam) {
+        if (tabParam.toLowerCase() === "notes") setActive("Notes");
+        else if (tabParam.toLowerCase() === "quiz" || tabParam.toLowerCase() === "practice") router.push("/quiz");
+        else if (tabParam.toLowerCase() === "map") setActive("Knowledge map");
+        else if (tabParam.toLowerCase() === "tutor") setActive("AI tutor");
+      }
+    } catch {
+      // ignore
+    }
+
     let studentName = "Alex Smith";
     try {
       const stored = window.localStorage.getItem("digiguide-user");
@@ -493,9 +506,18 @@ function Overview({
         </div>
         <h2>Strengthen your {targetTopic} foundations.</h2>
         <p>{targetReason}</p>
-        <button className="cta" onClick={() => router.push(`/quiz?topic=${encodeURIComponent(targetTopic)}`)}>
-          Start recovery plan <ArrowUpRight size={15} />
-        </button>
+        <div style={{ display: "flex", gap: "10px", marginTop: "12px", flexWrap: "wrap" }}>
+          <button className="cta" onClick={() => router.push(`/quiz?topic=${encodeURIComponent(targetTopic)}`)}>
+            Start recovery plan <ArrowUpRight size={15} />
+          </button>
+          <button
+            className="cta"
+            style={{ background: "#edf5f2", color: "var(--teal)", border: "1px solid rgba(15,119,112,0.2)" }}
+            onClick={() => setActive("Notes")}
+          >
+            <BookOpen size={14} /> Open Study Notes &amp; Video
+          </button>
+        </div>
       </section>
 
       <section className="panel mastery">
