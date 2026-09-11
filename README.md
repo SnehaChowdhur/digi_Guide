@@ -1,58 +1,212 @@
-# NOVA Learning Digital Twin
+Personal Learning Digital Twin
+1. Project Overview
+Personal Learning Digital Twin is an AI-powered platform that creates a digital representation of a student's learning state. It continuously analyzes quiz performance, study patterns, mistakes, accuracy, time taken, and topic mastery to understand how the student is learning.
+The system then uses Machine Learning + AI to identify weaknesses, predict future performance, and generate a personalized learning roadmap.
+The goal is to move from one-size-fits-all education to adaptive, data-driven learning.
 
-NOVA is a hackathon-ready MVP for a personal learning digital twin. It models a student's mastery, confidence, accuracy, study rhythm, and recent activity, then turns that state into focused practice recommendations.
+2. Problem
+Traditional learning platforms generally provide the same content and difficulty to every student. They often fail to answer:
 
-## What's included
+Which topics is the student actually weak in?
+What should the student study next?
+Is the student's performance improving or declining?
+Which concepts are prerequisites for their weak areas?
+How much practice is likely to be required?
+3. Proposed Solution
+The system builds a continuously changing Learning Digital Twin for every student.
+Example:
 
-- Next.js App Router dashboard with local demo data
-- Adaptive quiz at `/quiz` with weak-topic targeting
-- Performance trend, topic mastery, study rhythm, recent activity, and prerequisite map
-- FastAPI service with twin, activity submission, prediction, and health endpoints
-- Explainable twin update and recommendation services
-- PostgreSQL + pgvector schema and Docker Compose service
-- Backend unit tests for mastery updates
+Student Learning Profile
 
-## Run the frontend
+Python                 91%
+Arrays                 83%
+Linked Lists           72%
+Trees                  61%
+Graphs                 51%
+Dynamic Programming    38%
+Every quiz or learning activity updates these values.
+The system can then determine:
+Current state → Weakness → Prediction → Recommendation → Improvement
 
-```bash
-npm install
-npm run dev
-```
+4. Core Features
+Student Dashboard
+Displays:
 
-Open `http://localhost:3000`. The first run uses demo data and does not require API keys or a database.
+Overall learning score
+Topic-wise mastery
+Performance history
+Study time
+Mistake frequency
+Strong and weak areas
+Adaptive Quiz System
+Questions can be selected according to the student's current ability and weak topics.
 
-## Run the backend
+Digital Twin Engine
+Maintains a continuously updated profile containing:
 
-From the project root, create a virtual environment and install the backend requirements:
+Topic mastery
+Confidence
+Accuracy
+Attempts
+Time taken
+Recent performance
+Forgetting/recency indicators
+AI Recommendation Engine
+Automatically recommends:
 
-```bash
-python -m venv .venv
-.venv\\Scripts\\activate
-pip install -r backend/requirements.txt
-uvicorn backend.app.main:app --reload --port 8000
-```
+What to study next
+What to revise
+Which questions to practice
+How much time to spend
+Personalized learning plans
+Performance Prediction
+ML models analyze historical learning data and estimate future mastery/performance.
+Example:
 
-The API is available at `http://localhost:8000`, with interactive docs at `/docs`.
+Current DP mastery: 38%
 
-Run backend tests with:
+After 1 session → 47%
+After 3 sessions → 63%
+Knowledge Graph
+Represents relationships between concepts:
 
-```bash
-python -m pytest backend/tests
-```
+Arrays
+   ↓
+Recursion
+   ↓
+Trees
+   ↓
+Graphs
+   ↓
+Dynamic Programming
+This allows the system to identify prerequisite concepts before recommending advanced topics.
 
-## Optional PostgreSQL
+AI Tutor
+An LLM can:
 
-```bash
-docker compose up -d postgres
-```
+Explain mistakes
+Explain difficult concepts
+Generate questions
+Create study plans
+Provide personalized feedback
+Optional Document Intelligence
+Students can upload PDFs or notes. The system uses embeddings and semantic search to find relevant learning material for their weak topics.
 
-The schema creates students, topics, learning states, and activity tables. Set `DATABASE_URL` from `.env.example` when wiring persistence into the API.
+5. System Workflow
+Student
+   ↓
+Quiz / Study Activity
+   ↓
+Collect Performance Data
+   ↓
+Learning Digital Twin
+   ↓
+ML Analysis
+   ↓
+Detect Weaknesses
+   ↓
+Predict Performance
+   ↓
+Recommendation Engine
+   ↓
+AI-Generated Learning Plan
+   ↓
+Student Practices Again
+   ↓
+Digital Twin Updates
+This creates a continuous learning feedback loop.
 
-## MVP API
+6. Technology Stack
+Frontend
+Next.js / React
+Tailwind CSS
+shadcn/ui
+Recharts — performance visualization
+React Flow — knowledge graph visualization
+Backend
+Python
+FastAPI
+REST APIs
+Database
+PostgreSQL
+pgvector for optional semantic/vector search
+Machine Learning
+Python
+Pandas
+NumPy
+Scikit-learn
+Possible models:
 
-- `GET /health`
-- `GET /api/twin/{student_id}`
-- `POST /api/twin/{student_id}/activity`
-- `GET /api/predictions/{topic}`
+Logistic Regression
+Random Forest
+Gradient Boosting
+AI
+LLM API for explanations, question generation, feedback, and personalized plans
+Embedding model/API for document semantic search
+Authentication
+JWT / Auth.js
+Storage
+S3-compatible storage or Cloudinary for uploaded documents
+Deployment
+Vercel — frontend
+Render/Railway — backend and database
+Version Control
+Git + GitHub
+7. Core ML Inputs
+The prediction model can use:
 
-The current API stores a demo state in memory so the core feedback loop is easy to test. PostgreSQL is prepared for the next persistence pass.
+Accuracy
+Question difficulty
+Time taken
+Number of attempts
+Mistake frequency
+Recent performance
+Days since last practice
+Previous mastery
+Output:
+
+Topic Mastery / Probability of Mastery
+8. Example
+A student repeatedly performs poorly in Dynamic Programming.
+The system detects:
+
+DP Mastery: 42% → 35%
+
+Status: 🔴 Weak
+
+Prediction:
+High probability of difficulty with advanced DP.
+The AI then generates:
+
+7-Day DP Recovery Plan
+
+Day 1 → Recursion
+Day 2 → Memoization
+Day 3 → 1D DP
+Day 4 → 2D DP
+Day 5 → Practice
+Day 6 → Revision
+Day 7 → Assessment
+After every session, the digital twin is updated.
+
+9. Innovation
+The key innovation is that this is not simply an AI tutor or quiz application.
+It combines:
+Digital Twin + Machine Learning + Knowledge Graph + LLM + Adaptive Learning
+The system continuously models how a particular student learns and changes recommendations based on that student's evolving state.
+
+10. Hackathon MVP
+For a 24–48 hour hackathon, focus on:
+
+Student login
+Quiz system
+Performance tracking
+Topic mastery calculation
+Digital Twin dashboard
+Weak-topic detection
+ML-based performance prediction
+AI-generated personalized study plan
+Knowledge graph visualization
+The strongest demo is:
+Take quiz → make mistakes → Digital Twin updates → weak topic detected → AI predicts risk → personalized study plan generated.
+provide me a read me file content in a simple way
