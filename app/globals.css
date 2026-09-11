@@ -58,6 +58,21 @@ h1, h2, h3, p { margin: 0; } h1 { font-family: 'Space Grotesk'; font-size: clamp
 .view-intro { max-width: 570px; line-height: 1.6; }
 .large-map { height: 330px; margin: 26px 0; border-radius: 14px; background: #eff7ec; overflow: hidden; position: relative; }
 .large-map .graph-lines { inset: 35px 18%; }
+.knowledge-map-view { max-width: 980px; align-content: start; }
+.knowledge-map-view > p { margin-top: 4px; }
+.knowledge-map-view .node[role="button"] { cursor: pointer; transition: transform .18s ease, box-shadow .18s ease; }
+.knowledge-map-view .node[role="button"]:hover, .knowledge-map-view .node[role="button"]:focus-visible { transform: scale(1.08); box-shadow: 0 7px 18px rgba(33,69,54,.2); outline: 3px solid #c8f169; outline-offset: 2px; }
+.map-list { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+.map-row { border: 1px solid var(--line); background: white; border-radius: 10px; padding: 11px 10px; display: flex; align-items: center; gap: 7px; color: var(--muted); font-size: 12px; text-align: left; min-width: 0; }
+.map-row:hover, .map-row.selected { border-color: var(--teal); background: #eff7ec; color: var(--ink); }
+.map-row i { width: 8px; height: 8px; flex: 0 0 auto; border-radius: 50%; }
+.map-row span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.map-row strong { margin-left: auto; color: var(--ink); }
+.map-detail { margin-top: 18px; padding: 18px; background: var(--ink); color: white; border-radius: 12px; display: flex; justify-content: space-between; gap: 20px; align-items: center; }
+.map-detail .kicker { color: var(--mint); }
+.map-detail h3 { font-family: 'Space Grotesk'; font-size: 20px; margin-top: 5px; }
+.map-detail-stats { display: grid; grid-template-columns: repeat(4, auto); gap: 18px; color: #b5c3bb; font-size: 11px; }
+.map-detail-stats strong { display: block; color: var(--mint); font-family: 'Space Grotesk'; font-size: 18px; margin-bottom: 3px; }
 .map-caption { position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); color: var(--muted); font-size: 11px; white-space: nowrap; }
 .map-legend { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
 .map-legend div { display: flex; align-items: center; gap: 7px; color: var(--muted); font-size: 11px; }
@@ -107,4 +122,5 @@ h1, h2, h3, p { margin: 0; } h1 { font-family: 'Space Grotesk'; font-size: clamp
 .result-grid span { color: var(--muted); font-size: 11px; }
 .result-actions { display: flex; justify-content: center; gap: 10px; }
 @media (max-width: 700px) { .quiz-card { padding: 26px 20px; } .result-grid { gap: 6px; } .map-legend { grid-template-columns: 1fr 1fr; } .history-item { grid-template-columns: 34px 1fr; } .history-item time { grid-column: 2; } }
+@media (max-width: 700px) { .map-list { grid-template-columns: 1fr 1fr; } .map-detail { display: block; } .map-detail-stats { grid-template-columns: repeat(2, 1fr); margin-top: 16px; } .large-map { height: 280px; } }
 @media (max-width: 700px) { .shell { display: block; } .sidebar { border-right: 0; border-bottom: 1px solid var(--line); padding: 15px 16px; } .brand { padding: 0 0 15px; } .nav { display: flex; overflow-x: auto; } .nav-button { white-space: nowrap; } .side-bottom { display: none; } .main { padding: 24px 16px 36px; } .topbar { align-items: flex-start; } .profile { display: none; } .top-actions { gap: 6px; } .grid { display: block; } .panel { margin-bottom: 14px; padding: 18px; } .hero { min-height: 290px; } .score { width: 115px; height: 115px; margin-right: 0; } .score strong { font-size: 30px; } .score span { margin-top: -30px; } .topic { grid-template-columns: 94px 1fr 34px; } .graph { min-height: 250px; } .auth-shell { display: block; } .auth-visual { min-height: 320px; padding: 24px; } .auth-visual h1 { font-size: 42px; } .auth-orbit { display: none; } .auth-form-wrap { padding: 34px 20px; } }
