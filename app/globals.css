@@ -39,7 +39,7 @@ h1, h2, h3, p { margin: 0; } h1 { font-family: 'Space Grotesk'; font-size: clamp
 .graph { min-height: 268px; position: relative; background: #eff7ec; overflow: hidden; } .graph-lines { position: absolute; inset: 35px 20px 24px; }
 .map-connectors { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; z-index: 0; }
 .map-connectors line { stroke: #86aa91; stroke-width: 1.2; stroke-dasharray: 2 1; vector-effect: non-scaling-stroke; }
-.node { position: absolute; width: 66px; height: 66px; border-radius: 50%; display: grid; place-items: center; text-align: center; font-size: 10px; font-weight: 700; border: 3px solid white; box-shadow: 0 4px 12px rgba(33,69,54,.12); } .node.a { top: 8px; left: 2%; background: #d8ebbb; } .node.b { top: 8px; right: 2%; background: #f7cda8; } .node.c { top: 37%; left: 35%; background: var(--teal); color: white; } .node.d { bottom: 0; left: 4%; background: #ddd0fa; } .node.e { bottom: 0; right: 3%; background: var(--coral); color: white; }
+.node { position: absolute; width: 66px; height: 66px; border-radius: 50%; display: grid; place-items: center; text-align: center; font-size: 10px; font-weight: 700; border: 3px solid white; box-shadow: 0 4px 12px rgba(33,69,54,.12); } .node.a { top: 8px; left: 2%; background: #d8ebbb; } .node.b { top: 8px; right: 2%; background: #f7cda8; } .node.c { top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--teal); color: white; } .node.d { bottom: 0; left: 4%; background: #ddd0fa; } .node.e { bottom: 0; right: 3%; background: var(--coral); color: white; }
 .activity { grid-column: span 3; } .activity-row { display: grid; grid-template-columns: 34px 1fr auto; gap: 12px; align-items: center; padding: 12px 0; border-top: 1px solid #edf1ed; } .activity-row:first-of-type { border-top: 0; } .activity-icon { width: 32px; height: 32px; border-radius: 9px; background: #eaf3e7; display: grid; place-items: center; color: var(--teal); } .activity-row p { font-size: 13px; } .activity-row small { color: var(--muted); font-size: 11px; } .activity-row > time { color: var(--muted); font-size: 11px; }
 .workspace-view { max-width: 720px; min-height: 280px; display: grid; align-content: center; gap: 16px; } .workspace-view p { color: var(--muted); max-width: 540px; line-height: 1.6; }
 .profile { border: 0; background: transparent; color: var(--ink); text-align: left; }
@@ -63,12 +63,13 @@ h1, h2, h3, p { margin: 0; } h1 { font-family: 'Space Grotesk'; font-size: clamp
 .large-map .node { width: 58px; height: 58px; font-size: 9px; }
 .large-map .node.e { width: 78px; }
 .large-map .node.a, .large-map .node.b { top: 0; }
-.large-map .node.c { top: 40%; }
+.large-map .node.c { top: 50%; left: 50%; transform: translate(-50%, -50%); }
 .large-map .node.d, .large-map .node.e { bottom: 0; }
 .knowledge-map-view { max-width: 980px; align-content: start; }
 .knowledge-map-view > p { margin-top: 4px; }
 .knowledge-map-view .node[role="button"] { cursor: pointer; transition: transform .18s ease, box-shadow .18s ease; }
 .knowledge-map-view .node[role="button"]:hover, .knowledge-map-view .node[role="button"]:focus-visible { transform: scale(1.08); box-shadow: 0 7px 18px rgba(33,69,54,.2); outline: 3px solid #c8f169; outline-offset: 2px; }
+.knowledge-map-view .node.c[role="button"]:hover, .knowledge-map-view .node.c[role="button"]:focus-visible { transform: translate(-50%, -50%) scale(1.08); }
 .map-list { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
 .map-row { border: 1px solid var(--line); background: white; border-radius: 10px; padding: 11px 10px; display: flex; align-items: center; gap: 7px; color: var(--muted); font-size: 12px; text-align: left; min-width: 0; }
 .map-row:hover, .map-row.selected { border-color: var(--teal); background: #eff7ec; color: var(--ink); }
