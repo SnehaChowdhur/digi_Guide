@@ -2,6 +2,8 @@ node_modules
 .next
 .env
 .venv
+venv/
+*.tsbuildinfo
 __pycache__
 *.pyc
 .DS_Store
