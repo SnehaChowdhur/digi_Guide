@@ -133,6 +133,7 @@ Start with a small example and trace each step. Tell me your current level or sh
 }
 
 export async function POST(request: NextRequest) {
+  let lastMessage = "";
   try {
     const body = await request.json() as { messages?: ChatMessage[] };
     const messages = (body.messages || []).filter(message => message.content?.trim()).slice(-20);
@@ -140,8 +141,9 @@ export async function POST(request: NextRequest) {
       return Response.json({ error: "Send at least one user message." }, { status: 400 });
     }
 
+    lastMessage = messages[messages.length - 1].content;
     const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
-    if (!apiKey) return new Response(demoTutorResponse(messages[messages.length - 1].content), { headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-cache", "X-Tutor-Provider": "demo" } });
+    if (!apiKey || apiKey.startsWith("replace-with")) return new Response(demoTutorResponse(lastMessage), { headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-cache", "X-Tutor-Provider": "demo" } });
 
     const ai = new GoogleGenAI({ apiKey });
     const chat = ai.chats.create({
@@ -164,6 +166,6 @@ export async function POST(request: NextRequest) {
     return new Response(readable, { headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-cache" } });
   } catch (error) {
     console.error("Chat route failed", error);
-    return Response.json({ error: "The tutor could not respond right now." }, { status: 500 });
+    return new Response(demoTutorResponse(lastMessage || "computer science"), { headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-cache", "X-Tutor-Provider": "demo-fallback" } });
   }
 }
