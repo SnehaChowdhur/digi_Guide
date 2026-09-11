@@ -7,8 +7,8 @@ body { font-family: 'DM Sans', sans-serif; }
 button { font: inherit; cursor: pointer; }
 .shell { display: grid; grid-template-columns: 242px minmax(0, 1fr); min-height: 100vh; }
 .sidebar { border-right: 1px solid var(--line); padding: 28px 18px; background: #fbfdf9; display: flex; flex-direction: column; }
-.brand { display: flex; align-items: center; gap: 10px; padding: 0 10px 38px; font-family: 'Space Grotesk'; font-weight: 700; letter-spacing: -.04em; font-size: 20px; }
-.brand-mark { width: 28px; height: 28px; border-radius: 9px; background: var(--ink); color: var(--mint); display: grid; place-items: center; font-size: 15px; }
+.brand { display: flex; align-items: center; gap: 10px; padding: 0 10px 38px; font-family: 'Space Grotesk'; font-weight: 700; letter-spacing: -.04em; font-size: 0; min-height: 44px; background: url('/digiguide-logo.svg') left center / 178px auto no-repeat; }
+.brand-mark { display: none; }
 .nav { display: grid; gap: 7px; }
 .nav-button { border: 0; background: transparent; color: #788780; display: flex; align-items: center; gap: 12px; border-radius: 11px; padding: 12px 13px; text-align: left; font-size: 14px; }
 .nav-button.active, .nav-button:hover { background: #eaf3e7; color: var(--teal); font-weight: 600; }
@@ -23,6 +23,7 @@ h1, h2, h3, p { margin: 0; } h1 { font-family: 'Space Grotesk'; font-size: clamp
 .avatar { width: 34px; height: 34px; border-radius: 50%; background: #f5b74b; display: grid; place-items: center; font-weight: 700; font-size: 12px; }
 .profile small { display: block; color: var(--muted); font-size: 11px; }
 .grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 18px; }
+.grid > .graph { display: none; }
 .panel { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 22px; min-width: 0; }
 .hero { grid-column: span 2; background: var(--ink); color: white; min-height: 244px; display: flex; justify-content: space-between; overflow: hidden; position: relative; }
 .hero:after { content: ''; position: absolute; width: 260px; height: 260px; border: 1px solid rgba(200,241,105,.35); border-radius: 50%; right: -42px; bottom: -150px; box-shadow: 0 0 0 25px rgba(200,241,105,.05), 0 0 0 50px rgba(200,241,105,.05); }
@@ -76,6 +77,10 @@ h1, h2, h3, p { margin: 0; } h1 { font-family: 'Space Grotesk'; font-size: clamp
 .legend-dot.prerequisite { background: #d8ebbb; } .legend-dot.focus { background: var(--coral); }
 .legend-line { width: 18px; height: 1px; background: #aec9b6; display: inline-block; }
 .map-detail p { color: #b5c3bb; font-size: 11px; margin-top: 5px; }
+.knowledge-map-view { background: linear-gradient(145deg, #ffffff 0%, #f5fbf2 100%); box-shadow: 0 18px 55px rgba(23, 35, 33, .08); }
+.knowledge-map-view .large-map { background: radial-gradient(circle at 50% 45%, #dff2d5 0%, #eff7ec 48%, #e4f0df 100%); border: 1px solid #d6e8d2; box-shadow: inset 0 0 0 1px #ffffffaa; }
+.knowledge-map-view .map-row { transition: transform .18s ease, box-shadow .18s ease; }
+.knowledge-map-view .map-row:hover, .knowledge-map-view .map-row.selected { transform: translateY(-2px); box-shadow: 0 7px 18px rgba(15, 119, 112, .12); }
 .knowledge-map-view .node[role="button"] { cursor: pointer; transition: transform .18s ease, box-shadow .18s ease; }
 .knowledge-map-view .node[role="button"]:hover, .knowledge-map-view .node[role="button"]:focus-visible { transform: scale(1.08); box-shadow: 0 7px 18px rgba(33,69,54,.2); outline: 3px solid #c8f169; outline-offset: 2px; }
 .knowledge-map-view .node.c[role="button"]:hover, .knowledge-map-view .node.c[role="button"]:focus-visible { transform: translate(-50%, -50%) scale(1.08); }
