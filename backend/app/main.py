@@ -7,7 +7,12 @@ from .services.recommendation_engine import build_recommendations
 from .services.twin_engine import apply_activity, overall_score
 
 app = FastAPI(title="NOVA Learning Twin API", version="0.1.0")
-app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:3000"], allow_methods=["*"], allow_headers=["*"])
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "http://localhost:3001", "http://127.0.0.1:3000", "http://127.0.0.1:3001"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 _topics = [
     {"topic": "Python", "mastery": 91, "confidence": .95, "attempts": 64, "accuracy": .91},
