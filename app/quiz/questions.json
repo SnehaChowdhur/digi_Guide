@@ -1,0 +1,632 @@
+[
+  {
+    "id": 1,
+    "topic": "Dynamic Programming",
+    "prompt": "Which technique caches the results of overlapping subproblems during top-down recursion?",
+    "answers": [
+      "Memoization",
+      "Backtracking",
+      "Tabulation",
+      "Iteration"
+    ],
+    "correct": 0,
+    "explanation": "Memoization stores return values of pure functions in a cache (like a hash map) so repeated calls with identical arguments return in O(1) time.",
+    "difficulty": 0.5,
+    "isOneWord": true
+  },
+  {
+    "id": 2,
+    "topic": "Dynamic Programming",
+    "prompt": "In bottom-up dynamic programming, what is the iterative table-building technique called?",
+    "answers": [
+      "Pruning",
+      "Tabulation",
+      "Recursion",
+      "Memoization"
+    ],
+    "correct": 1,
+    "explanation": "Tabulation solves problems iteratively starting from the smallest base cases and populates a 1D or 2D array upwards.",
+    "difficulty": 0.5,
+    "isOneWord": true
+  },
+  {
+    "id": 3,
+    "topic": "Dynamic Programming",
+    "prompt": "Which core property requires that an optimal global solution is constructed from optimal sub-solutions?",
+    "answers": [
+      "Monotonicity",
+      "Idempotence",
+      "Substructure",
+      "Overlapping"
+    ],
+    "correct": 2,
+    "explanation": "Optimal substructure means the globally optimal answer can be computed directly from optimal answers to its smaller subproblems.",
+    "difficulty": 0.6,
+    "isOneWord": true
+  },
+  {
+    "id": 4,
+    "topic": "Dynamic Programming",
+    "prompt": "What algorithm paradigm optimizes problems with overlapping subproblems instead of recomputing them?",
+    "answers": [
+      "Brute",
+      "Random",
+      "Greedy",
+      "Dynamic"
+    ],
+    "correct": 3,
+    "explanation": "Dynamic Programming recognizes repeated subproblems in recursion trees and saves their solutions to reduce exponential time to polynomial.",
+    "difficulty": 0.5,
+    "isOneWord": true
+  },
+  {
+    "id": 5,
+    "topic": "Dynamic Programming",
+    "prompt": "In the classic 0/1 Knapsack problem, which paradigm guarantees finding the true global maximum value?",
+    "answers": [
+      "Dynamic",
+      "Heuristic",
+      "Greedy",
+      "Linear"
+    ],
+    "correct": 0,
+    "explanation": "Because items cannot be fractionally divided, greedy choices by value-to-weight ratio fail; only Dynamic Programming guarantees the optimum.",
+    "difficulty": 0.7,
+    "isOneWord": true
+  },
+  {
+    "id": 6,
+    "topic": "Recursion",
+    "prompt": "Which condition must every recursive function define to prevent infinite execution and stack overflow?",
+    "answers": [
+      "Loop",
+      "Base",
+      "Return",
+      "Break"
+    ],
+    "correct": 1,
+    "explanation": "The base case is the halting condition where the function returns a concrete answer directly without making further recursive calls.",
+    "difficulty": 0.4,
+    "isOneWord": true
+  },
+  {
+    "id": 7,
+    "topic": "Recursion",
+    "prompt": "Where does the operating system allocate activation frames and local variables for active recursive calls?",
+    "answers": [
+      "Register",
+      "Cache",
+      "Stack",
+      "Heap"
+    ],
+    "correct": 2,
+    "explanation": "Each function invocation pushes a new activation frame onto the call stack containing its local parameters, return address, and variables.",
+    "difficulty": 0.4,
+    "isOneWord": true
+  },
+  {
+    "id": 8,
+    "topic": "Recursion",
+    "prompt": "What fatal runtime error occurs when recursive calls exceed system call-stack memory limits?",
+    "answers": [
+      "Deadlock",
+      "Segmentation",
+      "Underflow",
+      "Overflow"
+    ],
+    "correct": 3,
+    "explanation": "A Stack Overflow occurs when continuous recursive invocations exhaust the memory space reserved for the process call stack.",
+    "difficulty": 0.5,
+    "isOneWord": true
+  },
+  {
+    "id": 9,
+    "topic": "Recursion",
+    "prompt": "What type of recursion executes the recursive call as the absolute final statement with zero deferred work?",
+    "answers": [
+      "Tail",
+      "Tree",
+      "Indirect",
+      "Head"
+    ],
+    "correct": 0,
+    "explanation": "Tail recursion allows compilers to reuse the current stack frame rather than pushing a new one, avoiding stack growth.",
+    "difficulty": 0.6,
+    "isOneWord": true
+  },
+  {
+    "id": 10,
+    "topic": "Recursion",
+    "prompt": "Which recursive technique systematically explores possible solution paths and retracts upon hitting dead ends?",
+    "answers": [
+      "Tabulation",
+      "Backtracking",
+      "Memoization",
+      "Divide"
+    ],
+    "correct": 1,
+    "explanation": "Backtracking (e.g. N-Queens, Sudoku) recursively explores choices and undoes state changes when a constraint is violated.",
+    "difficulty": 0.6,
+    "isOneWord": true
+  },
+  {
+    "id": 11,
+    "topic": "Trees",
+    "prompt": "What is a tree node with zero children called?",
+    "answers": [
+      "Root",
+      "Parent",
+      "Leaf",
+      "Sibling"
+    ],
+    "correct": 2,
+    "explanation": "A leaf node (or external node) resides at the bottom of a tree hierarchy and has no outgoing child links.",
+    "difficulty": 0.3,
+    "isOneWord": true
+  },
+  {
+    "id": 12,
+    "topic": "Trees",
+    "prompt": "What is the single topmost origin node of a tree hierarchy called?",
+    "answers": [
+      "Peak",
+      "Apex",
+      "Leaf",
+      "Root"
+    ],
+    "correct": 3,
+    "explanation": "The root node is the unique entry point of a tree that has no parent.",
+    "difficulty": 0.3,
+    "isOneWord": true
+  },
+  {
+    "id": 13,
+    "topic": "Trees",
+    "prompt": "Which tree traversal visits the nodes of a Binary Search Tree (BST) in ascending sorted order?",
+    "answers": [
+      "In-order",
+      "Pre-order",
+      "Post-order",
+      "Level-order"
+    ],
+    "correct": 0,
+    "explanation": "In-order traversal visits Left Subtree -> Root -> Right Subtree, which yields monotonically sorted order for BSTs.",
+    "difficulty": 0.5,
+    "isOneWord": true
+  },
+  {
+    "id": 14,
+    "topic": "Trees",
+    "prompt": "What is the average search time complexity in a self-balancing binary search tree like AVL or Red-Black?",
+    "answers": [
+      "O(n)",
+      "O(log n)",
+      "O(n log n)",
+      "O(1)"
+    ],
+    "correct": 1,
+    "explanation": "Self-balancing trees enforce tree height bounded by O(log n), ensuring all search, insertion, and deletion operations run in logarithmic time.",
+    "difficulty": 0.5,
+    "isOneWord": true
+  },
+  {
+    "id": 15,
+    "topic": "Trees",
+    "prompt": "What is the worst-case search time complexity in a completely degenerate, skewed BST of n nodes?",
+    "answers": [
+      "O(1)",
+      "O(log n)",
+      "O(n)",
+      "O(n^2)"
+    ],
+    "correct": 2,
+    "explanation": "When keys are inserted in sorted order naively, a standard BST degenerates into a linear linked list of height n, making search O(n).",
+    "difficulty": 0.5,
+    "isOneWord": true
+  },
+  {
+    "id": 16,
+    "topic": "Trees",
+    "prompt": "In a binary tree, what is the maximum number of child nodes any single node can possess?",
+    "answers": [
+      "One",
+      "Four",
+      "Three",
+      "Two"
+    ],
+    "correct": 3,
+    "explanation": "By definition, every node in a binary tree has at most two children: a left child and a right child.",
+    "difficulty": 0.3,
+    "isOneWord": true
+  },
+  {
+    "id": 17,
+    "topic": "Arrays",
+    "prompt": "What is the average time complexity of directly accessing array[i] by index via pointer arithmetic?",
+    "answers": [
+      "O(1)",
+      "O(log n)",
+      "O(i)",
+      "O(n)"
+    ],
+    "correct": 0,
+    "explanation": "Because arrays occupy contiguous memory, calculating address = base + (i * size) allows immediate constant-time random access.",
+    "difficulty": 0.3,
+    "isOneWord": true
+  },
+  {
+    "id": 18,
+    "topic": "Arrays",
+    "prompt": "What is the worst-case time complexity of inserting a new element at index 0 of a fixed-size array of n elements?",
+    "answers": [
+      "O(n^2)",
+      "O(n)",
+      "O(1)",
+      "O(log n)"
+    ],
+    "correct": 1,
+    "explanation": "Inserting at index 0 requires shifting all existing n elements one position to the right, which takes O(n) operations.",
+    "difficulty": 0.4,
+    "isOneWord": true
+  },
+  {
+    "id": 19,
+    "topic": "Arrays",
+    "prompt": "Which algorithm finds the contiguous subarray with the maximum sum in linear O(n) time?",
+    "answers": [
+      "Kruskal",
+      "Dijkstra",
+      "Kadane",
+      "Floyd"
+    ],
+    "correct": 2,
+    "explanation": "Kadane's algorithm maintains current_max = max(x, current_max + x) in a single linear pass over the array.",
+    "difficulty": 0.5,
+    "isOneWord": true
+  },
+  {
+    "id": 20,
+    "topic": "Arrays",
+    "prompt": "What physical RAM layout property enables CPU hardware caches to prefetch neighboring array elements rapidly?",
+    "answers": [
+      "Dynamic",
+      "Fragmented",
+      "Scattered",
+      "Contiguous"
+    ],
+    "correct": 3,
+    "explanation": "Contiguous memory layout provides spatial locality of reference, maximizing L1/L2 CPU hardware cache hits.",
+    "difficulty": 0.5,
+    "isOneWord": true
+  },
+  {
+    "id": 21,
+    "topic": "Arrays",
+    "prompt": "Which array technique tracks two boundary indices that expand or contract over contiguous elements?",
+    "answers": [
+      "Window",
+      "Pointers",
+      "Divide",
+      "Hashing"
+    ],
+    "correct": 0,
+    "explanation": "The Sliding Window pattern maintains a dynamic subsegment window over contiguous array elements in O(n) time.",
+    "difficulty": 0.5,
+    "isOneWord": true
+  },
+  {
+    "id": 22,
+    "topic": "Linked Lists",
+    "prompt": "What is the time complexity of prepending a new node at the head of a singly linked list?",
+    "answers": [
+      "O(n^2)",
+      "O(1)",
+      "O(log n)",
+      "O(n)"
+    ],
+    "correct": 1,
+    "explanation": "Inserting at the head only requires creating a new node pointing to the current head and updating the head reference in O(1) time.",
+    "difficulty": 0.4,
+    "isOneWord": true
+  },
+  {
+    "id": 23,
+    "topic": "Linked Lists",
+    "prompt": "Which algorithm detects cycles in a linked list using slow and fast moving pointer references?",
+    "answers": [
+      "Tarjan",
+      "Dijkstra",
+      "Floyd",
+      "Prim"
+    ],
+    "correct": 2,
+    "explanation": "Floyd's Tortoise and Hare algorithm detects loops in O(n) time and O(1) auxiliary space.",
+    "difficulty": 0.5,
+    "isOneWord": true
+  },
+  {
+    "id": 24,
+    "topic": "Linked Lists",
+    "prompt": "In a standard singly linked list, what value does the next reference of the final tail node point to?",
+    "answers": [
+      "zero",
+      "head",
+      "tail",
+      "null"
+    ],
+    "correct": 3,
+    "explanation": "The last node in a null-terminated singly linked list holds next = null, signifying the boundary of the sequence.",
+    "difficulty": 0.3,
+    "isOneWord": true
+  },
+  {
+    "id": 25,
+    "topic": "Linked Lists",
+    "prompt": "Which linked list variant connects the tail node's next pointer directly back to the head node?",
+    "answers": [
+      "Circular",
+      "Doubly",
+      "Singly",
+      "Skip"
+    ],
+    "correct": 0,
+    "explanation": "In a circular linked list, the final node links to the head, creating an endless traversable ring with no null termination.",
+    "difficulty": 0.4,
+    "isOneWord": true
+  },
+  {
+    "id": 26,
+    "topic": "Linked Lists",
+    "prompt": "Which linked list node stores pointer references to both its successor and its predecessor?",
+    "answers": [
+      "Singly",
+      "Doubly",
+      "Sentinel",
+      "Circular"
+    ],
+    "correct": 1,
+    "explanation": "A doubly linked list node contains next and prev references, enabling bidirectional traversal in O(1) step time.",
+    "difficulty": 0.4,
+    "isOneWord": true
+  },
+  {
+    "id": 27,
+    "topic": "Binary Search",
+    "prompt": "What strict ordering condition must an array satisfy before binary search can be applied?",
+    "answers": [
+      "Contiguous",
+      "Unique",
+      "Sorted",
+      "Positive"
+    ],
+    "correct": 2,
+    "explanation": "Binary search relies on monotonic ordering to eliminate half of the remaining search space after each comparison.",
+    "difficulty": 0.3,
+    "isOneWord": true
+  },
+  {
+    "id": 28,
+    "topic": "Binary Search",
+    "prompt": "What is the worst-case time complexity of binary search on a sorted array of n elements?",
+    "answers": [
+      "O(n)",
+      "O(1)",
+      "O(n log n)",
+      "O(log n)"
+    ],
+    "correct": 3,
+    "explanation": "Binary search halves the remaining candidates with each step, halving n until 1 element remains: log2(n) comparisons.",
+    "difficulty": 0.4,
+    "isOneWord": true
+  },
+  {
+    "id": 29,
+    "topic": "Binary Search",
+    "prompt": "Which fundamental algorithm design paradigm repeatedly divides the search space into two halves?",
+    "answers": [
+      "Divide",
+      "Backtracking",
+      "Dynamic",
+      "Greedy"
+    ],
+    "correct": 0,
+    "explanation": "Divide-and-conquer partitions a problem into smaller independent subproblems, solves them, and combines the results.",
+    "difficulty": 0.5,
+    "isOneWord": true
+  },
+  {
+    "id": 30,
+    "topic": "Binary Search",
+    "prompt": "In a sorted array of 1,024 elements, what is the maximum number of comparisons binary search needs?",
+    "answers": [
+      "100",
+      "10",
+      "1024",
+      "512"
+    ],
+    "correct": 1,
+    "explanation": "Because 2^10 = 1024, binary search requires at most log2(1024) = 10 comparisons in the worst case.",
+    "difficulty": 0.4,
+    "isOneWord": true
+  },
+  {
+    "id": 31,
+    "topic": "Binary Search",
+    "prompt": "Which Python standard library module provides fast logarithmic bisection and search algorithms?",
+    "answers": [
+      "collections",
+      "math",
+      "bisect",
+      "heapq"
+    ],
+    "correct": 2,
+    "explanation": "The bisect module provides bisect_left and bisect_right to locate insertion points in sorted sequences in O(log n) time.",
+    "difficulty": 0.5,
+    "isOneWord": true
+  },
+  {
+    "id": 32,
+    "topic": "Memoization",
+    "prompt": "In Python, which functools decorator provides automatic Least-Recently-Used caching for pure functions?",
+    "answers": [
+      "cache",
+      "partial",
+      "wraps",
+      "lru_cache"
+    ],
+    "correct": 3,
+    "explanation": "@functools.lru_cache decorates functions with a bounded dictionary and doubly linked list eviction mechanism.",
+    "difficulty": 0.5,
+    "isOneWord": true
+  },
+  {
+    "id": 33,
+    "topic": "Memoization",
+    "prompt": "What internal data structure does memoization typically use for O(1) argument-to-result lookup?",
+    "answers": [
+      "HashMap",
+      "Queue",
+      "Heap",
+      "Stack"
+    ],
+    "correct": 0,
+    "explanation": "A hash map (dictionary) hashes parameter tuples into bucket indices to provide average O(1) retrieval of cached answers.",
+    "difficulty": 0.4,
+    "isOneWord": true
+  },
+  {
+    "id": 34,
+    "topic": "Memoization",
+    "prompt": "Which mathematical property must a function strictly possess so that caching its output is deterministic and bug-free?",
+    "answers": [
+      "Associativity",
+      "Purity",
+      "Monotonicity",
+      "Recursion"
+    ],
+    "correct": 1,
+    "explanation": "A pure function always yields the exact same return value given identical arguments with zero observable side effects.",
+    "difficulty": 0.5,
+    "isOneWord": true
+  },
+  {
+    "id": 35,
+    "topic": "Memoization",
+    "prompt": "What operation occurs when a fixed-capacity LRU cache is full and a new key must be inserted?",
+    "answers": [
+      "Crash",
+      "Overflow",
+      "Eviction",
+      "Rehash"
+    ],
+    "correct": 2,
+    "explanation": "The least recently accessed key is evicted from the cache to keep total memory within specified bounds.",
+    "difficulty": 0.5,
+    "isOneWord": true
+  },
+  {
+    "id": 36,
+    "topic": "Python",
+    "prompt": "What is the average time complexity of testing membership (x in collection) inside a Python set?",
+    "answers": [
+      "O(n)",
+      "O(log n)",
+      "O(n^2)",
+      "O(1)"
+    ],
+    "correct": 3,
+    "explanation": "Python sets are implemented as hash tables with open addressing, providing average O(1) lookup.",
+    "difficulty": 0.4,
+    "isOneWord": true
+  },
+  {
+    "id": 37,
+    "topic": "Python",
+    "prompt": "What is the average time complexity of testing membership (x in collection) inside a Python list?",
+    "answers": [
+      "O(n)",
+      "O(log n)",
+      "O(1)",
+      "O(n^2)"
+    ],
+    "correct": 0,
+    "explanation": "Lists must linearly iterate through up to n elements from index 0 until the match is found: O(n) worst/average.",
+    "difficulty": 0.4,
+    "isOneWord": true
+  },
+  {
+    "id": 38,
+    "topic": "Python",
+    "prompt": "Which Python keyword produces sequence elements lazily on demand without allocating the entire list in RAM?",
+    "answers": [
+      "pass",
+      "yield",
+      "return",
+      "continue"
+    ],
+    "correct": 1,
+    "explanation": "The yield keyword turns a function into a generator iterator, emitting values one at a time and preserving stack state.",
+    "difficulty": 0.5,
+    "isOneWord": true
+  },
+  {
+    "id": 39,
+    "topic": "Python",
+    "prompt": "Which Python data structure represents an immutable ordered sequence of values?",
+    "answers": [
+      "Set",
+      "List",
+      "Tuple",
+      "Dictionary"
+    ],
+    "correct": 2,
+    "explanation": "Tuples cannot be modified after creation, making them immutable and hashable (eligible as dictionary keys).",
+    "difficulty": 0.3,
+    "isOneWord": true
+  },
+  {
+    "id": 40,
+    "topic": "Python",
+    "prompt": "Which Python collections class provides an O(1) double-ended queue for fast appends and pops on both ends?",
+    "answers": [
+      "Counter",
+      "defaultdict",
+      "heapq",
+      "deque"
+    ],
+    "correct": 3,
+    "explanation": "collections.deque is implemented as a doubly linked list of fixed blocks, supporting O(1) operations on both ends.",
+    "difficulty": 0.5,
+    "isOneWord": true
+  },
+  {
+    "id": 41,
+    "topic": "Python",
+    "prompt": "Which adaptive hybrid sorting algorithm powers Python's built-in .sort() and sorted() functions?",
+    "answers": [
+      "Timsort",
+      "Quicksort",
+      "Heapsort",
+      "Mergesort"
+    ],
+    "correct": 0,
+    "explanation": "Timsort is a stable hybrid of Merge Sort and Insertion Sort designed by Tim Peters for real-world partially-ordered data.",
+    "difficulty": 0.6,
+    "isOneWord": true
+  },
+  {
+    "id": 42,
+    "topic": "Python",
+    "prompt": "What data structure does Python initialize when executing counts = collections.Counter(items)?",
+    "answers": [
+      "Set",
+      "Dictionary",
+      "List",
+      "Tuple"
+    ],
+    "correct": 1,
+    "explanation": "Counter is a specialized subclass of dict that maps unique elements to their integer frequency counts.",
+    "difficulty": 0.4,
+    "isOneWord": true
+  }
+]

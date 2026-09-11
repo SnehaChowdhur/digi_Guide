@@ -12,10 +12,12 @@ import {
   RotateCcw,
   Sparkles,
   XCircle,
+  Zap,
 } from "lucide-react";
 import StudyWatermark from "@/components/study-watermark";
+import rawQuestions from "./questions.json";
 
-type QuizQuestion = {
+export type QuizQuestion = {
   id: number;
   topic: string;
   prompt: string;
@@ -23,99 +25,24 @@ type QuizQuestion = {
   correct: number;
   explanation: string;
   difficulty?: number;
+  isOneWord?: boolean;
 };
 
 const API = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
 
-const FALLBACK_QUESTIONS: QuizQuestion[] = [
-  {
-    id: 1,
-    topic: "Dynamic Programming",
-    prompt: "Which technique stores solutions to overlapping subproblems so each subproblem is solved only once?",
-    answers: ["Greedy selection", "Memoization", "Binary search", "Backtracking"],
-    correct: 1,
-    explanation: "Memoization caches return values of expensive function calls so identical subproblems are not computed repeatedly.",
-    difficulty: 0.5,
-  },
-  {
-    id: 2,
-    topic: "Dynamic Programming",
-    prompt: "What are the two essential characteristics of a problem that can be solved via Dynamic Programming?",
-    answers: [
-      "Only one valid input and constant time lookup",
-      "Optimal substructure and overlapping subproblems",
-      "A sorted array and divide-and-conquer strategy",
-      "Non-recursive formulation and greedy choice property",
-    ],
-    correct: 1,
-    explanation: "Dynamic Programming requires optimal substructure (optimal solution contains optimal sub-solutions) and overlapping subproblems.",
-    difficulty: 0.6,
-  },
-  {
-    id: 3,
-    topic: "Recursion",
-    prompt: "What occurs if a recursive function lacks a valid base case or fails to reach it?",
-    answers: ["Memory leak in heap", "Stack overflow error", "Zero division error", "Deadlock"],
-    correct: 1,
-    explanation: "Without a reachable base case, recursive calls push activation frames indefinitely until the call stack limit is breached.",
-    difficulty: 0.4,
-  },
-  {
-    id: 4,
-    topic: "Trees",
-    prompt: "Which traversal visits a binary search tree (BST) in ascending sorted order?",
-    answers: ["Pre-order (Root, Left, Right)", "In-order (Left, Root, Right)", "Post-order (Left, Right, Root)", "Level-order (BFS)"],
-    correct: 1,
-    explanation: "In-order traversal visits the left subtree, then root, then right subtree, producing naturally sorted keys in a BST.",
-    difficulty: 0.5,
-  },
-  {
-    id: 5,
-    topic: "Arrays",
-    prompt: "What is the average time complexity of accessing an element in an array by its index?",
-    answers: ["O(n)", "O(log n)", "O(1)", "O(n log n)"],
-    correct: 2,
-    explanation: "Because array memory is contiguous, any index can be accessed directly in O(1) via base_address + (index * size).",
-    difficulty: 0.3,
-  },
-  {
-    id: 6,
-    topic: "Linked Lists",
-    prompt: "Why is inserting a node at the head of a singly linked list O(1) while in a dynamic array it is usually O(n)?",
-    answers: [
-      "Linked lists use hash tables internally",
-      "Head insertion requires only pointer reassignment without shifting subsequent elements",
-      "Arrays must allocate double memory for every insert",
-      "Linked lists store elements in contiguous RAM blocks",
-    ],
-    correct: 1,
-    explanation: "Prepending to a linked list simply links the new node to the old head and updates head pointer in O(1) time.",
-    difficulty: 0.5,
-  },
-  {
-    id: 7,
-    topic: "Memoization",
-    prompt: "How does memoization differ from bottom-up tabulation?",
-    answers: [
-      "Memoization is top-down on-demand recursion with a cache, while tabulation is bottom-up iterative",
-      "Memoization is always faster than tabulation",
-      "Tabulation can only be used on trees",
-      "Memoization does not store intermediate results",
-    ],
-    correct: 0,
-    explanation: "Memoization solves from the top down and caches subproblems as requested; tabulation fills answers from smallest base cases upward.",
-    difficulty: 0.5,
-  },
-];
+const FALLBACK_QUESTIONS: QuizQuestion[] = rawQuestions as QuizQuestion[];
 
 const AVAILABLE_TOPICS = [
   "All Topics",
+  "⚡ One-Word Rapid Fire",
   "Dynamic Programming",
   "Recursion",
   "Trees",
   "Arrays",
   "Linked Lists",
+  "Binary Search",
   "Memoization",
+  "Python",
 ];
 
 export default function QuizPage() {
@@ -131,7 +58,7 @@ function QuizContent() {
   const initialTopic = searchParams.get("topic") || "All Topics";
 
   const [selectedTopic, setSelectedTopic] = useState<string>(initialTopic);
-  const [questions, setQuestions] = useState<QuizQuestion[]>(FALLBACK_QUESTIONS);
+  const [questions, setQuestions] = useState<QuizQuestion[]>(FALLBACK_QUESTIONS.slice(0, 6));
   const [step, setStep] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [isAnswerChecked, setIsAnswerChecked] = useState(false);
@@ -157,9 +84,26 @@ function QuizContent() {
   useEffect(() => {
     let mounted = true;
     const fetchQuestions = async () => {
+      // If it's the Rapid-Fire chip, handle locally with all one-word questions
+      if (selectedTopic === "⚡ One-Word Rapid Fire") {
+        if (mounted) {
+          const oneWordList = FALLBACK_QUESTIONS.filter((q) => q.isOneWord);
+          // Pick 6 varied one-word questions
+          const shuffled = [...oneWordList].sort(() => 0.5 - Math.random());
+          setQuestions(shuffled.slice(0, 6));
+          setStep(0);
+          setSelected(null);
+          setIsAnswerChecked(false);
+          setAnswers([]);
+          setDone(false);
+          setTimer(0);
+        }
+        return;
+      }
+
       try {
-        const query = selectedTopic !== "All Topics" ? `?topic=${encodeURIComponent(selectedTopic)}&count=4` : `?count=4`;
-        const res = await fetch(`${API}/api/quiz/questions${query}`);
+        const queryTopic = selectedTopic !== "All Topics" ? `?topic=${encodeURIComponent(selectedTopic)}&count=6` : `?count=6`;
+        const res = await fetch(`${API}/api/quiz/questions${queryTopic}`);
         if (res.ok) {
           const data: QuizQuestion[] = await res.json();
           if (mounted && data.length > 0) {
@@ -179,12 +123,14 @@ function QuizContent() {
 
       if (mounted) {
         if (selectedTopic === "All Topics") {
-          setQuestions(FALLBACK_QUESTIONS.slice(0, 4));
+          // Pick a balanced, engaging set of 6 questions
+          const shuffled = [...FALLBACK_QUESTIONS].sort(() => 0.5 - Math.random());
+          setQuestions(shuffled.slice(0, 6));
         } else {
           const filtered = FALLBACK_QUESTIONS.filter(
             (q) => q.topic.toLowerCase() === selectedTopic.toLowerCase()
           );
-          setQuestions(filtered.length > 0 ? filtered : FALLBACK_QUESTIONS.slice(0, 3));
+          setQuestions(filtered.length > 0 ? filtered : FALLBACK_QUESTIONS.slice(0, 5));
         }
         setStep(0);
         setSelected(null);
@@ -255,6 +201,13 @@ function QuizContent() {
   };
 
   const resetQuiz = () => {
+    // Reshuffle for fresh practice
+    if (selectedTopic === "⚡ One-Word Rapid Fire") {
+      const oneWordList = FALLBACK_QUESTIONS.filter((q) => q.isOneWord);
+      setQuestions([...oneWordList].sort(() => 0.5 - Math.random()).slice(0, 6));
+    } else if (selectedTopic === "All Topics") {
+      setQuestions([...FALLBACK_QUESTIONS].sort(() => 0.5 - Math.random()).slice(0, 6));
+    }
     setStep(0);
     setSelected(null);
     setIsAnswerChecked(false);
@@ -279,8 +232,7 @@ function QuizContent() {
           <div className="kicker">Adaptive Session Complete</div>
           <h1>Nice work, {studentName}.</h1>
           <p>
-            Your practice responses have been integrated into your Learning Digital Twin. Your topic mastery and
-            decay projections have been calibrated.
+            You scored {score} out of {questions.length} ({accuracyPercent}%). Your digital twin probabilistic state has been updated.
           </p>
           <div className="result-grid">
             <div>
@@ -298,13 +250,22 @@ function QuizContent() {
               <span>Twin Signal</span>
             </div>
           </div>
-          <div className="result-actions">
+          <div className="result-actions" style={{ flexWrap: "wrap", gap: "10px" }}>
             <Link href="/" className="quiz-button">
               Return to Overview <ArrowRight size={16} />
             </Link>
             <button className="secondary-button" onClick={resetQuiz}>
               <RotateCcw size={15} /> Practice Again
             </button>
+            {selectedTopic !== "⚡ One-Word Rapid Fire" && (
+              <button
+                className="secondary-button"
+                onClick={() => setSelectedTopic("⚡ One-Word Rapid Fire")}
+                style={{ background: "#fffbeb", color: "#b45309", borderColor: "#fde68a" }}
+              >
+                <Zap size={14} /> Try One-Word Rapid Fire
+              </button>
+            )}
           </div>
         </div>
       </main>
@@ -334,7 +295,7 @@ function QuizContent() {
         {AVAILABLE_TOPICS.map((t) => (
           <button
             key={t}
-            className={`topic-tag-btn ${selectedTopic === t ? "active" : ""}`}
+            className={`topic-tag-btn ${selectedTopic === t ? "active" : ""} ${t.startsWith("⚡") ? "rapid-chip" : ""}`}
             onClick={() => setSelectedTopic(t)}
           >
             {t}
@@ -347,16 +308,23 @@ function QuizContent() {
       </div>
 
       <section className="quiz-card">
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "8px" }}>
           <div className="kicker">
             Question {step + 1} of {questions.length}
           </div>
-          <span className="topic-pill">{question.topic}</span>
+          <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+            {question.isOneWord && (
+              <span className="one-word-badge">
+                <Zap size={11} /> One-Word
+              </span>
+            )}
+            <span className="topic-pill">{question.topic}</span>
+          </div>
         </div>
 
         <h1>{question.prompt}</h1>
 
-        <div className="answers">
+        <div className={`answers ${question.isOneWord ? "is-one-word" : ""}`}>
           {question.answers.map((answer, index) => {
             let extraClass = "";
             if (isAnswerChecked) {
@@ -411,20 +379,22 @@ function QuizContent() {
             disabled={submitting}
             onClick={() => void advanceNext()}
           >
-            {submitting
-              ? "Updating Twin..."
-              : step === questions.length - 1
-              ? "Finish Session"
-              : "Next Question"}
-            <ArrowRight size={16} />
+            {step >= questions.length - 1 ? (
+              <>
+                Complete Practice <Sparkles size={16} />
+              </>
+            ) : (
+              <>
+                Next Question <ArrowRight size={16} />
+              </>
+            )}
           </button>
         )}
-      </section>
 
-      <div className="quiz-note">
-        <Sparkles size={15} /> Each answer calibrates your personal learning model.
-      </div>
+        <div className="quiz-note">
+          <Sparkles size={14} /> Answer accuracy directly calibrates your probabilistic digital twin.
+        </div>
+      </section>
     </main>
   );
 }
-

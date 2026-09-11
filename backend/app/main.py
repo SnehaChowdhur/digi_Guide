@@ -1,3 +1,5 @@
+import json
+from pathlib import Path
 from datetime import datetime, timezone
 import os
 
@@ -42,134 +44,34 @@ DEFAULT_TOPICS = [
 ]
 
 # Question bank for adaptive learning
-QUESTION_BANK: list[Question] = [
-    # Dynamic Programming
-    Question(
-        id=1,
-        topic="Dynamic Programming",
-        prompt="Which technique stores solutions to overlapping subproblems so each subproblem is solved only once?",
-        answers=["Greedy selection", "Memoization", "Binary search", "Backtracking"],
-        correct=1,
-        explanation="Memoization caches the results of function calls so identical subproblems are not computed repeatedly.",
-        difficulty=0.5,
-    ),
-    Question(
-        id=2,
-        topic="Dynamic Programming",
-        prompt="What are the two essential characteristics of a problem that can be solved via Dynamic Programming?",
-        answers=[
-            "Only one valid input and constant time lookup",
-            "Optimal substructure and overlapping subproblems",
-            "A sorted array and divide-and-conquer strategy",
-            "Non-recursive formulation and greedy choice property",
-        ],
-        correct=1,
-        explanation="Dynamic Programming requires optimal substructure (optimal solution contains optimal sub-solutions) and overlapping subproblems.",
-        difficulty=0.6,
-    ),
-    Question(
-        id=3,
-        topic="Dynamic Programming",
-        prompt="In bottom-up Dynamic Programming, how is state accumulated compared to top-down memoization?",
-        answers=[
-            "Via the recursive call stack",
-            "Iteratively, from the smallest base cases up to the desired target",
-            "Randomly sampling solutions until convergence",
-            "Using depth-first search branch pruning",
-        ],
-        correct=1,
-        explanation="Bottom-up (tabulation) fills a table iteratively starting from base cases, avoiding call-stack overhead.",
-        difficulty=0.7,
-    ),
-    # Recursion
-    Question(
-        id=4,
-        topic="Recursion",
-        prompt="What occurs if a recursive function lacks a valid base case or fails to reach it?",
-        answers=["Memory leak in heap", "Stack overflow error", "Zero division error", "Deadlock"],
-        correct=1,
-        explanation="Without a base case, recursive calls continue indefinitely until the call stack exceeds its limit (StackOverflow).",
-        difficulty=0.4,
-    ),
-    Question(
-        id=5,
-        topic="Recursion",
-        prompt="What is the time complexity of the naive recursive Fibonacci implementation fib(n) = fib(n-1) + fib(n-2)?",
-        answers=["O(n)", "O(n log n)", "O(2^n)", "O(n^2)"],
-        correct=2,
-        explanation="Naive recursive Fibonacci branches into two recursive calls at each level, producing an O(2^n) exponential tree.",
-        difficulty=0.6,
-    ),
-    # Trees
-    Question(
-        id=6,
-        topic="Trees",
-        prompt="Which tree traversal visits the nodes of a Binary Search Tree (BST) in ascending sorted order?",
-        answers=["Pre-order (Root, Left, Right)", "In-order (Left, Root, Right)", "Post-order (Left, Right, Root)", "Level-order (BFS)"],
-        correct=1,
-        explanation="In-order traversal visits the left subtree, then the root, then the right subtree, producing sorted output for a BST.",
-        difficulty=0.5,
-    ),
-    Question(
-        id=7,
-        topic="Trees",
-        prompt="What is the maximum number of nodes at level L (0-indexed) of a binary tree?",
-        answers=["2^L", "2^(L+1)", "L^2", "2*L"],
-        correct=0,
-        explanation="At level 0 there is 2^0 = 1 node (root), level 1 has 2^1 = 2 nodes, and level L has up to 2^L nodes.",
-        difficulty=0.5,
-    ),
-    # Arrays
-    Question(
-        id=8,
-        topic="Arrays",
-        prompt="What is the average time complexity of accessing an element in an array by its index?",
-        answers=["O(n)", "O(log n)", "O(1)", "O(n log n)"],
-        correct=2,
-        explanation="Arrays have contiguous memory layout, enabling constant time O(1) direct indexing via pointer arithmetic.",
-        difficulty=0.3,
-    ),
-    # Linked Lists
-    Question(
-        id=9,
-        topic="Linked Lists",
-        prompt="Why is inserting a node at the head of a singly linked list O(1) while in a dynamic array it is usually O(n)?",
-        answers=[
-            "Linked lists use hash tables internally",
-            "Linked list head insertion requires updating only one pointer without shifting elements",
-            "Arrays must allocate double memory for every insert",
-            "Linked lists store elements in contiguous RAM blocks",
-        ],
-        correct=1,
-        explanation="Pretending a node to a linked list simply changes the new node's next pointer and head pointer, taking O(1) time.",
-        difficulty=0.5,
-    ),
-    # Memoization
-    Question(
-        id=10,
-        topic="Memoization",
-        prompt="How does memoization differ from basic tabulation?",
-        answers=[
-            "Memoization is top-down using recursion and a cache, while tabulation is bottom-up iterative",
-            "Memoization uses more CPU cycles but less memory",
-            "Tabulation can only be used on graph algorithms",
-            "Memoization does not work with overlapping subproblems",
-        ],
-        correct=0,
-        explanation="Memoization solves subproblems on-demand from the top down and stores results, while tabulation builds answers from the bottom up.",
-        difficulty=0.5,
-    ),
-    # Python
-    Question(
-        id=11,
-        topic="Python",
-        prompt="In Python, what is the amortized time complexity of appending an element to the end of a list?",
-        answers=["O(1)", "O(n)", "O(log n)", "O(n^2)"],
-        correct=0,
-        explanation="Python lists are dynamic arrays with over-allocation, yielding O(1) amortized time for appends.",
-        difficulty=0.4,
-    ),
-]
+_QUESTIONS_FILE = Path(__file__).resolve().parent.parent.parent / "app" / "quiz" / "questions.json"
+if _QUESTIONS_FILE.exists():
+    with open(_QUESTIONS_FILE, "r", encoding="utf-8") as _f:
+        _data = json.load(_f)
+    QUESTION_BANK: list[Question] = [
+        Question(
+            id=item["id"],
+            topic=item["topic"],
+            prompt=item["prompt"],
+            answers=item["answers"],
+            correct=item["correct"],
+            explanation=item["explanation"],
+            difficulty=item.get("difficulty", 0.5),
+        )
+        for item in _data
+    ]
+else:
+    QUESTION_BANK: list[Question] = [
+        Question(
+            id=1,
+            topic="Dynamic Programming",
+            prompt="Which technique caches the results of overlapping subproblems during top-down recursion?",
+            answers=["Memoization", "Tabulation", "Backtracking", "Iteration"],
+            correct=0,
+            explanation="Memoization stores return values of pure functions in a cache so repeated calls return in O(1).",
+            difficulty=0.5,
+        )
+    ]
 
 
 class StudentStore:

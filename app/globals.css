@@ -571,6 +571,12 @@ h1, h2, h3, p { margin: 0; } h1 { font-family: 'Space Grotesk'; font-size: clamp
 .answers button:disabled { cursor: default; }
 .topic-tag-btn { border: 1px solid var(--line); background: white; color: var(--muted); border-radius: 20px; padding: 5px 12px; font-size: 11px; cursor: pointer; transition: all .15s ease; }
 .topic-tag-btn:hover, .topic-tag-btn.active { border-color: var(--teal); background: var(--teal); color: white; }
+.topic-tag-btn.rapid-chip { border-color: #f59e0b; color: #b45309; background: #fffbeb; font-weight: 700; }
+.topic-tag-btn.rapid-chip:hover, .topic-tag-btn.rapid-chip.active { background: #f59e0b; color: white; border-color: #f59e0b; }
+.one-word-badge { display: inline-flex; align-items: center; gap: 5px; background: #fff8e6; color: #b45309; border: 1px solid #fde68a; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; letter-spacing: 0.02em; }
+.answers.is-one-word { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.answers.is-one-word button { font-size: 14px; font-weight: 600; padding: 14px 16px; }
+@media (max-width: 600px) { .answers.is-one-word { grid-template-columns: 1fr; } }
 
 /* Dynamic Score Ring */
 .score-circle-svg { transform: rotate(-90deg); width: 140px; height: 140px; }
