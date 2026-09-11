@@ -1,16 +1,75 @@
 "use client";
 
-import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
-import { ArrowUp, Bot, BrainCircuit, Check, Copy, LoaderCircle, Sparkles, User } from "lucide-react";
+import { FormEvent, KeyboardEvent, useEffect, useMemo, useRef, useState } from "react";
+import { ArrowUp, Bot, BrainCircuit, Check, Copy, LoaderCircle, RotateCcw, Sparkles, User } from "lucide-react";
 
 type Message = { id: number; role: "user" | "model"; content: string; streaming?: boolean };
 
-const quickPrompts = [
+const CHAT_STORAGE_KEY = "digiguide_tutor_messages_v2";
+
+const defaultPrompts = [
   "Explain Dynamic Programming with a real-life analogy",
   "How does memoization differ from recursion?",
   "Generate a 3-question practice quiz on Trees",
   "Walk through Binary Search step-by-step",
 ];
+
+const topicFollowUps: Record<string, string[]> = {
+  "Recursion": [
+    "Can you give another example of it in Python?",
+    "What is the space complexity of the call stack?",
+    "What happens if the base case is missing?",
+    "Give me a 3-question practice quiz on Recursion",
+  ],
+  "Dynamic Programming": [
+    "Can you give another example of it in Python?",
+    "How does tabulation differ from memoization?",
+    "What is the space complexity optimization here?",
+    "Quiz me on Dynamic Programming",
+  ],
+  "Trees & BST": [
+    "Can you give another example of it in Python?",
+    "Show in-order vs pre-order traversal code",
+    "What is the time complexity in balanced vs skewed BST?",
+    "Quiz me on Trees and Binary Search Trees",
+  ],
+  "Linked Lists": [
+    "Can you give another example of it in Python?",
+    "Show Floyd's cycle detection algorithm",
+    "Compare Linked List vs Array time complexity",
+    "Quiz me on Linked Lists",
+  ],
+  "Binary Search": [
+    "Can you give another example of it in Python?",
+    "Why must the array be sorted first?",
+    "How does O(log n) scale with 1 million elements?",
+    "Quiz me on Binary Search",
+  ],
+  "Arrays": [
+    "Can you give another example of it in Python?",
+    "Show the Sliding Window pattern code",
+    "Why is inserting at index 0 an O(n) operation?",
+    "Quiz me on Arrays and Two Pointers",
+  ],
+  "Memoization": [
+    "Can you give another example of it in Python?",
+    "Show an LRU Cache implementation with @lru_cache",
+    "What are the memory trade-offs of caching?",
+    "Quiz me on Memoization",
+  ],
+  "Graphs": [
+    "Can you give another example of it in Python?",
+    "Why does BFS find the shortest path but DFS doesn't?",
+    "Show Dijkstra's algorithm in Python",
+    "Quiz me on Graphs and BFS/DFS",
+  ],
+  "Python DSA": [
+    "Can you give another example of it in Python?",
+    "Compare time complexity of list vs set vs dict",
+    "Show generator expressions for memory efficiency",
+    "Quiz me on Python Data Structures",
+  ],
+};
 
 function CodeBlock({ language, code }: { language: string; code: string }) {
   const [copied, setCopied] = useState(false);
@@ -62,7 +121,7 @@ function FormattedContent({ content }: { content: string }) {
         return paragraphs.map((para, pIdx) => {
           if (!para.trim()) return null;
           // Simple inline formatting for bold **...** and code `...`
-          const inlineTokens = para.split(/(\*\*.*?\*\*|`.*?`)/g);
+          const inlineTokens = para.split(/(\**.*?\**|`.*?`)/g);
           return (
             <p key={`${index}-${pIdx}`} style={{ margin: "6px 0", lineHeight: 1.55 }}>
               {inlineTokens.map((token, tIdx) => {
@@ -97,6 +156,7 @@ function FormattedContent({ content }: { content: string }) {
 }
 
 export default function AiTutor({ initialPrompt }: { initialPrompt?: string } = {}) {
+  // Restore messages from localStorage or initialize with personalized greeting
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
@@ -110,25 +170,21 @@ export default function AiTutor({ initialPrompt }: { initialPrompt?: string } = 
   const textarea = useRef<HTMLTextAreaElement>(null);
   const bottom = useRef<HTMLDivElement>(null);
 
+  // Initialize and restore saved chat on mount
   useEffect(() => {
-    if (initialPrompt && initialPrompt.trim()) {
-      setInput(initialPrompt);
-      setTimeout(() => {
-        if (textarea.current) {
-          textarea.current.focus();
-          textarea.current.style.height = "0px";
-          textarea.current.style.height = `${Math.min(textarea.current.scrollHeight, 150)}px`;
-        }
-      }, 100);
-    }
-  }, [initialPrompt]);
-
-  useEffect(() => {
-    // Personalize greeting if user is saved in localStorage
     try {
-      const stored = window.localStorage.getItem("digiguide-user");
-      if (stored) {
-        const user = JSON.parse(stored) as { name?: string };
+      const saved = window.localStorage.getItem(CHAT_STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setMessages(parsed);
+          return;
+        }
+      }
+      // If no saved chat, personalize default greeting
+      const storedUser = window.localStorage.getItem("digiguide-user");
+      if (storedUser) {
+        const user = JSON.parse(storedUser) as { name?: string };
         const firstName = user.name ? user.name.split(" ")[0] : "there";
         setMessages([
           {
@@ -143,6 +199,57 @@ export default function AiTutor({ initialPrompt }: { initialPrompt?: string } = 
     }
   }, []);
 
+  // Save messages to localStorage on updates (stripping streaming flags)
+  useEffect(() => {
+    try {
+      if (messages.length > 0) {
+        const clean = messages.map((m) => ({ ...m, streaming: false }));
+        window.localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(clean));
+      }
+    } catch {
+      // Ignore storage errors
+    }
+  }, [messages]);
+
+  // Handle incoming initial prompt (e.g. from Notes Hub "Ask AI Tutor")
+  useEffect(() => {
+    if (initialPrompt && initialPrompt.trim()) {
+      setInput(initialPrompt);
+      setTimeout(() => {
+        if (textarea.current) {
+          textarea.current.focus();
+          textarea.current.style.height = "0px";
+          textarea.current.style.height = `${Math.min(textarea.current.scrollHeight, 150)}px`;
+        }
+      }, 100);
+    }
+  }, [initialPrompt]);
+
+  // Detect active topic from the entire conversation history
+  const activeTopic = useMemo(() => {
+    for (let i = messages.length - 1; i >= 0; i--) {
+      const text = messages[i].content.toLowerCase();
+      if (text.includes("recursion") || text.includes("factorial") || text.includes("call stack")) return "Recursion";
+      if (text.includes("dynamic programming") || text.includes("knapsack") || text.includes("tabulation") || text.includes("fibonacci")) return "Dynamic Programming";
+      if (text.includes("memoization") || text.includes("lru")) return "Memoization";
+      if (text.includes("tree") || text.includes("bst") || text.includes("in-order") || text.includes("pre-order")) return "Trees & BST";
+      if (text.includes("linked list") || text.includes("head node") || text.includes("pointer")) return "Linked Lists";
+      if (text.includes("binary search") || text.includes("sorted array") || text.includes("search space")) return "Binary Search";
+      if (text.includes("two pointers") || text.includes("sliding window") || text.includes("subarray") || text.includes("array")) return "Arrays";
+      if (text.includes("graph") || text.includes("bfs") || text.includes("dfs") || text.includes("dijkstra")) return "Graphs";
+      if (text.includes("python") || text.includes("complexity") || text.includes("big o")) return "Python DSA";
+    }
+    return null;
+  }, [messages]);
+
+  // Dynamic context-aware suggestion prompts
+  const activePrompts = useMemo(() => {
+    if (activeTopic && topicFollowUps[activeTopic]) {
+      return topicFollowUps[activeTopic];
+    }
+    return defaultPrompts;
+  }, [activeTopic]);
+
   useEffect(() => {
     bottom.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -155,9 +262,36 @@ export default function AiTutor({ initialPrompt }: { initialPrompt?: string } = 
     }
   };
 
-  const send = async (event?: FormEvent) => {
+  const clearChat = () => {
+    try {
+      window.localStorage.removeItem(CHAT_STORAGE_KEY);
+      let firstName = "there";
+      const stored = window.localStorage.getItem("digiguide-user");
+      if (stored) {
+        const user = JSON.parse(stored) as { name?: string };
+        if (user.name) firstName = user.name.split(" ")[0];
+      }
+      setMessages([
+        {
+          id: Date.now(),
+          role: "model",
+          content: `Hi ${firstName}! I have reset our conversation memory. Which topic would you like to explore next?`,
+        },
+      ]);
+    } catch {
+      setMessages([
+        {
+          id: Date.now(),
+          role: "model",
+          content: "Conversation reset. What concept would you like to explore?",
+        },
+      ]);
+    }
+  };
+
+  const send = async (event?: FormEvent, textToSend?: string) => {
     event?.preventDefault();
-    const content = input.trim();
+    const content = (textToSend || input).trim();
     if (!content || loading) return;
 
     const userMessage: Message = { id: Date.now(), role: "user", content };
@@ -172,15 +306,16 @@ export default function AiTutor({ initialPrompt }: { initialPrompt?: string } = 
     ]);
 
     try {
+      // Send full conversation history so backend engine has multi-turn context
+      const payloadMessages = [...messages, userMessage].map(({ role, content: text }) => ({
+        role,
+        content: text,
+      }));
+
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          messages: [...messages, userMessage].map(({ role, content: text }) => ({
-            role,
-            content: text,
-          })),
-        }),
+        body: JSON.stringify({ messages: payloadMessages }),
       });
 
       if (!response.ok || !response.body) {
@@ -221,7 +356,11 @@ export default function AiTutor({ initialPrompt }: { initialPrompt?: string } = 
 
   const selectPrompt = (promptText: string) => {
     setInput(promptText);
-    textarea.current?.focus();
+    if (textarea.current) {
+      textarea.current.focus();
+      textarea.current.style.height = "0px";
+      textarea.current.style.height = `${Math.min(textarea.current.scrollHeight, 150)}px`;
+    }
   };
 
   const keyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -244,10 +383,30 @@ export default function AiTutor({ initialPrompt }: { initialPrompt?: string } = 
             <p>Ask for conceptual analogies, step-by-step traces, or practice challenges.</p>
           </div>
         </div>
-        <span className="tutor-status">
-          <i /> Tutor ready
-        </span>
+
+        <div className="tutor-header-right">
+          {activeTopic && (
+            <span className="tutor-context-chip" title="Chatbot is referencing this topic from previous messages">
+              <Sparkles size={12} /> Active Context: <strong>{activeTopic}</strong>
+            </span>
+          )}
+          <span className="tutor-status">
+            <i /> Tutor ready
+          </span>
+          {messages.length > 1 && (
+            <button
+              type="button"
+              className="tutor-reset-btn"
+              onClick={clearChat}
+              title="Reset conversation memory and start a new topic"
+              aria-label="New Chat"
+            >
+              <RotateCcw size={12} /> New Chat
+            </button>
+          )}
+        </div>
       </header>
+
       <div className="chat-history" aria-live="polite">
         {messages.map((message) => (
           <div className={`chat-message ${message.role}`} key={message.id}>
@@ -270,21 +429,29 @@ export default function AiTutor({ initialPrompt }: { initialPrompt?: string } = 
         ))}
         <div ref={bottom} />
       </div>
+
       <div className="quick-prompts">
-        <span>Suggested topics:</span>
-        {quickPrompts.map((prompt) => (
-          <button key={prompt} onClick={() => selectPrompt(prompt)}>
-            <Sparkles size={12} />
+        <span className="quick-prompts-label">
+          <Sparkles size={11} />
+          {activeTopic ? `Suggested for ${activeTopic}:` : "Suggested topics:"}
+        </span>
+        {activePrompts.map((prompt) => (
+          <button key={prompt} onClick={() => selectPrompt(prompt)} type="button">
             {prompt}
           </button>
         ))}
       </div>
+
       <form className="chat-composer" onSubmit={send}>
         <textarea
           ref={textarea}
           rows={1}
           value={input}
-          placeholder="Ask digiGUIDE anything about data structures or algorithms..."
+          placeholder={
+            activeTopic
+              ? `Ask a follow-up about ${activeTopic}, request another example, or test your code...`
+              : "Ask digiGUIDE anything about data structures or algorithms..."
+          }
           onChange={(event) => {
             setInput(event.target.value);
             resize();
@@ -301,9 +468,8 @@ export default function AiTutor({ initialPrompt }: { initialPrompt?: string } = 
         </button>
       </form>
       <p className="composer-note">
-        digiGUIDE can make mistakes. Use it to build intuition, then verify your code.
+        digiGUIDE references your ongoing chat history. Use &quot;New Chat&quot; in the top right to start a fresh topic.
       </p>
     </section>
   );
 }
-

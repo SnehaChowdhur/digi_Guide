@@ -373,8 +373,14 @@ h1, h2, h3, p { margin: 0; } h1 { font-family: 'Space Grotesk'; font-size: clamp
 .tutor-icon { width: 42px; height: 42px; border-radius: 12px; background: #eaf3e7; color: var(--teal); display: grid; place-items: center; }
 .tutor-header h2 { margin-top: 5px; }
 .tutor-header p { color: var(--muted); font-size: 12px; margin-top: 5px; }
-.tutor-status { display: flex; gap: 7px; align-items: center; align-self: flex-start; color: var(--muted); font-size: 11px; white-space: nowrap; }
+.tutor-header-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; align-self: flex-start; }
+.tutor-context-chip { display: inline-flex; align-items: center; gap: 6px; background: rgba(15, 119, 112, 0.08); color: var(--teal); border: 1px solid rgba(15, 119, 112, 0.22); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; animation: fade-in .3s ease; }
+.tutor-context-chip strong { color: var(--teal); }
+.tutor-reset-btn { display: inline-flex; align-items: center; gap: 5px; background: white; border: 1px solid var(--line); color: var(--muted); font-size: 11px; padding: 4px 10px; border-radius: 8px; cursor: pointer; transition: all .15s ease; }
+.tutor-reset-btn:hover { border-color: var(--teal); color: var(--teal); background: #f3f9f3; }
+.tutor-status { display: flex; gap: 7px; align-items: center; color: var(--muted); font-size: 11px; white-space: nowrap; }
 .tutor-status i { width: 7px; height: 7px; border-radius: 50%; background: #64a86e; box-shadow: 0 0 0 4px #e6f3e7; }
+.quick-prompts-label { font-size: 11px; color: var(--muted); font-weight: 600; display: inline-flex; align-items: center; gap: 4px; margin-right: 4px; }
 .chat-history { flex: 1; min-height: 310px; max-height: 430px; overflow-y: auto; padding: 24px 4px; display: grid; align-content: start; gap: 18px; }
 .chat-message { display: flex; align-items: flex-start; gap: 10px; max-width: 78%; }
 .chat-message.user { justify-self: end; flex-direction: row-reverse; }

@@ -1,167 +1,367 @@
 import { GoogleGenAI } from "@google/genai";
 import { NextRequest } from "next/server";
+import topicData from "./topics.json";
 
 export const runtime = "nodejs";
 
-const systemPrompt = `You are digiGUIDE, a patient, encouraging, and rigorous computer science tutor. Teach so a student can understand and connect the idea, not just memorize a definition. For every concept question, use this structure when it fits: plain-English idea, relatable real-life analogy, simple text diagram when useful, small step-by-step example, code or pseudocode when useful, time and space complexity, one common mistake, and one short check-for-understanding question. Use clean plain text with short paragraphs. Avoid decorative symbols, emojis, excessive headings, bold markers, and unnecessary punctuation. Use a simple numbered list only when it improves clarity. Adapt to the learner's level and never pretend to know private data.`;
+const systemPrompt = `You are digiGUIDE, a patient, encouraging, and rigorous computer science tutor. Teach so a student can understand and connect the idea, not just memorize a definition. For every concept question, use this structure when it fits: plain-English idea, relatable real-life analogy, simple text diagram when useful, small step-by-step example, code or pseudocode when useful, time and space complexity, one common mistake, and one short check-for-understanding question. Use clean plain text with short paragraphs. Avoid decorative symbols, emojis, excessive headings, bold markers, and unnecessary punctuation. Use a simple numbered list only when it improves clarity. Adapt to the learner's level and never pretend to know private data. Always maintain conversational continuity by referencing previous topics and questions discussed in the chat.`;
 
-type ChatMessage = { role: "user" | "model"; content: string };
+export type ChatMessage = { role: "user" | "model"; content: string };
 
-function demoTutorResponse(message: string) {
-  const prompt = message.toLowerCase();
-  if (prompt.includes("quiz")) return "Here is a quick practice set:\n\n1. What is the base case in a recursive function?\n2. Why does memoization improve dynamic programming?\n3. What is the time complexity of binary search?\n\nReply with your answers and I will review them.";
-  if (prompt.includes("recursion")) return `Recursion
+type TopicKey =
+  | "recursion"
+  | "dynamic_programming"
+  | "trees"
+  | "linked_lists"
+  | "arrays"
+  | "binary_search"
+  | "memoization"
+  | "graphs"
+  | "python";
 
-Recursion is when a function solves a problem by calling itself on a smaller version of that problem.
+type TopicProfile = {
+  key: TopicKey;
+  title: string;
+  keywords: string[];
+  mainExplanation: string;
+  secondExample: string;
+  pythonCode: string;
+  complexityExplanation: string;
+  quizQuestions: string;
+  checkAnswers: { keywords: string[]; feedback: string }[];
+};
 
-Imagine opening nested boxes. You open one box, find a smaller box inside, and repeat until you reach the smallest empty box. That smallest box is the base case.
+const topicProfiles: Record<TopicKey, TopicProfile> = topicData as unknown as Record<TopicKey, TopicProfile>;
 
-Example trace
-
-factorial(3)
-  -> 3 * factorial(2)
-       -> 2 * factorial(1)
-            -> 1  (base case)
-
-Example code
-
-function factorial(n) {
-  if (n === 0) return 1;
-  return n * factorial(n - 1);
+/**
+ * Checks if a query is an anaphora or pronoun reference (e.g. "it", "this", "another example", "in python").
+ */
+function isAnaphoraOrFollowUp(text: string): boolean {
+  const lower = text.toLowerCase();
+  return (
+    lower.includes("it") ||
+    lower.includes("this") ||
+    lower.includes("that") ||
+    lower.includes("another") ||
+    lower.includes("example") ||
+    lower.includes("more") ||
+    lower.includes("code") ||
+    lower.includes("in python") ||
+    lower.includes("time complexity") ||
+    lower.includes("space complexity") ||
+    lower.includes("why") ||
+    lower.includes("how") ||
+    lower.includes("quiz") ||
+    lower.includes("practice") ||
+    lower.includes("test me")
+  );
 }
-The calls go down until the base case, then return upward: 1, 2, 6.
 
-Complexity: O(n) time and O(n) call-stack space.
+/**
+ * Determines the active topic by scanning conversation history.
+ * Prioritizes user messages to determine learner intent, checks longest keywords first,
+ * and handles follow-ups and pronouns seamlessly.
+ */
+function detectTopicInString(text: string, isUserMessage = true): TopicKey | null {
+  const lower = text.toLowerCase();
 
-Common mistake: forgetting a base case or failing to move toward it.
+  // Keyword list sorted by descending length to prevent substring clashes
+  const allKeywords: { kw: string; key: TopicKey }[] = [];
+  for (const [k, p] of Object.entries(topicProfiles)) {
+    for (const kw of p.keywords) {
+      allKeywords.push({ kw, key: k as TopicKey });
+    }
+  }
+  allKeywords.sort((a, b) => b.kw.length - a.kw.length);
 
-Check question: what would happen if the function called factorial(n) instead of factorial(n - 1)?`;
-  if (prompt.includes("linked list") || prompt.includes("linked-list")) return `Linked list
+  for (const item of allKeywords) {
+    // If the keyword is "python", ignore if it was just asking for code syntax "in python"
+    if (item.key === "python" && (lower.includes("in python") || lower.includes("python code")) && !lower.includes("python dsa")) {
+      continue;
+    }
+    if (lower.includes(item.kw)) {
+      return item.key;
+    }
+  }
+  return null;
+}
 
-A linked list is a chain of nodes. Each node stores a value and a link to the next node.
+function detectActiveTopic(messages: ChatMessage[]): TopicKey {
+  const lastMsg = messages[messages.length - 1];
+  const lastText = lastMsg ? lastMsg.content.toLowerCase() : "";
+  const isFollowUp = isAnaphoraOrFollowUp(lastText);
 
-Think of a treasure hunt. Each clue contains the current information and the location of the next clue. You follow the links from the first clue instead of jumping directly to clue 4.
+  // 1. If the last message is NOT purely a follow-up, check if the user introduced a new topic
+  if (!isFollowUp) {
+    const directTopic = detectTopicInString(lastText, true);
+    if (directTopic) return directTopic;
+  }
 
-Diagram
+  // 2. Look backwards through USER messages to find the established discussion topic
+  for (let i = messages.length - (isFollowUp ? 2 : 1); i >= 0; i--) {
+    if (messages[i].role === "user") {
+      const topic = detectTopicInString(messages[i].content, true);
+      if (topic) return topic;
+    }
+  }
 
-head
-  |
-  v
-[10 | next] -> [20 | next] -> [30 | null]
+  // 3. Fallback: inspect model messages backwards
+  for (let i = messages.length - 2; i >= 0; i--) {
+    const topic = detectTopicInString(messages[i].content, false);
+    if (topic) return topic;
+  }
 
-To insert 15 after 10:
-1. Create a new node containing 15.
-2. Point 15 to the node that 10 currently points to, which is 20.
-3. Point 10 to 15.
+  return "recursion";
+}
 
-Before: 10 -> 20 -> 30 -> null
-After:  10 -> 15 -> 20 -> 30 -> null
+/**
+ * Evaluates whether the user's message is an answer to a check question or quiz from earlier.
+ */
+function checkStudentAnswer(userMsg: string, topic: TopicProfile): string | null {
+  const clean = userMsg.toLowerCase().trim();
+  for (const item of topic.checkAnswers) {
+    for (const kw of item.keywords) {
+      if (clean.includes(kw)) {
+        return item.feedback;
+      }
+    }
+  }
+  return null;
+}
 
-Example code
+/**
+ * Intelligent context-aware tutor engine.
+ * Understands full conversation history, references previous messages,
+ * resolves pronouns ("it", "another example", "in python"), and evaluates student answers.
+ */
+export function generateContextualTutorResponse(messages: ChatMessage[]): string {
+  if (!messages.length) {
+    return "Hi! I'm digiGUIDE, your computer science adaptive tutor. What concept or problem would you like to explore together?";
+  }
 
-const newNode = { value: 15, next: head.next };
-head.next = newNode;
+  const lastMessage = messages[messages.length - 1];
+  const userText = lastMessage.content.trim();
+  const lower = userText.toLowerCase();
 
-Complexity: walking to a position is O(n). Inserting or removing is O(1) when you already have the correct node reference. Unlike an array, a linked list does not offer fast random access by index.
+  // 1. Identify active topic from conversation history
+  const activeKey = detectActiveTopic(messages);
+  const profile = topicProfiles[activeKey];
 
-Common mistake: changing the current link before saving the next link, which can lose the rest of the chain.
+  // 2. Explicit request for another example
+  const isAskingAnotherExample =
+    lower.includes("another example") ||
+    lower.includes("another one") ||
+    lower.includes("more examples") ||
+    lower.includes("different example") ||
+    lower.includes("give me an example of it") ||
+    lower.includes("give another example") ||
+    (lower.includes("example") && (lower.includes("it") || lower.includes("this") || lower.includes("that")));
 
-Check question: if you only have the head, how many nodes might you inspect to find the last node?`;
-  if (prompt.includes("array")) return `Arrays
-An array stores values next to one another in indexed positions, like numbered lockers.
+  if (isAskingAnotherExample) {
+    return `Referencing our discussion on **${profile.title}**:\n\n${profile.secondExample}`;
+  }
 
-Diagram
+  // 3. Explicit request for Code / Language implementation
+  const isAskingForCode =
+    lower.includes("in python") ||
+    lower.includes("python code") ||
+    lower.includes("show code") ||
+    lower.includes("write code") ||
+    lower.includes("how to code") ||
+    lower.includes("code it") ||
+    lower.includes("implementation") ||
+    lower.includes("syntax");
 
-index:  0    1    2
-value: [12] [25] [40]
+  if (isAskingForCode) {
+    return `Here is the clean, idiomatic Python implementation for **${profile.title}**:\n\n${profile.pythonCode}`;
+  }
 
-Reading array[2] is fast because the index tells us exactly where to look: O(1). Inserting near the front may require shifting many values, so it is usually O(n).
+  // 4. Explicit request for Complexity analysis
+  const isAskingComplexity =
+    lower.includes("time complexity") ||
+    lower.includes("space complexity") ||
+    lower.includes("big o") ||
+    lower.includes("how fast") ||
+    lower.includes("efficiency") ||
+    lower.includes("complexity") ||
+    (lower.includes("cost") && lower.includes("memory"));
 
-Use an array when indexed access matters. Use a linked list when frequent insertions are more important than direct access.
+  if (isAskingComplexity) {
+    return `Let's break down the computational complexity for **${profile.title}**:\n\n${profile.complexityExplanation}`;
+  }
 
-Check: why might inserting at the beginning of an array require moving other values?`;
-  if (prompt.includes("binary search")) return `Binary search
-Binary search finds a value in sorted data by repeatedly cutting the search range in half.
+  // 5. Explicit request for Quiz / Practice challenges
+  const isAskingQuiz =
+    lower.includes("quiz") ||
+    lower.includes("practice") ||
+    lower.includes("test me") ||
+    lower.includes("challenge") ||
+    lower.includes("exercise") ||
+    lower.includes("problem");
 
-Looking for a word in a dictionary, you open near the middle instead of checking every page from the beginning.
+  if (isAskingQuiz) {
+    return `Practice & Assessment for **${profile.title}**:\n\n${profile.quizQuestions}`;
+  }
 
-Diagram
+  // 6. Evaluate if the user is answering a previous check question
+  const answerFeedback = checkStudentAnswer(lower, profile);
+  if (answerFeedback) {
+    return answerFeedback;
+  }
 
-[2, 5, 8, 12, 17, 21, 30]
-             ^ check middle
+  // 7. Check if user explicitly asked about a different topic in their latest message
+  // (Only if it's not an anaphora referencing the existing topic)
+  if (!isAnaphoraOrFollowUp(lower)) {
+    for (const [key, p] of Object.entries(topicProfiles)) {
+      for (const kw of p.keywords) {
+        if (lower.includes(kw)) {
+          return p.mainExplanation;
+        }
+      }
+    }
+  }
 
-If the target is larger, discard the left half. If smaller, discard the right half. This requires sorted data and takes O(log n) time.
+  // 8. Follow-up clarification referencing current topic
+  if (
+    lower.includes("explain more") ||
+    lower.includes("tell me more") ||
+    lower.includes("why") ||
+    lower.includes("how") ||
+    lower.includes("what does it mean") ||
+    lower.includes("elaborate") ||
+    lower.includes("detail")
+  ) {
+    return `Continuing from our discussion on **${profile.title}**:\n\n${profile.mainExplanation}`;
+  }
 
-Check: what must be true about the input before binary search can be used?`;
-  if (prompt.includes("tree")) return `Trees
-A tree represents hierarchy: one node can lead to child nodes.
+  // 9. Short student confirmation / answer fallback
+  if (
+    lower === "yes" ||
+    lower === "ok" ||
+    lower === "okay" ||
+    lower === "got it" ||
+    lower === "i understand" ||
+    lower === "makes sense"
+  ) {
+    return `Great job! You have a solid grasp of **${profile.title}**. 
 
-A family tree or a folder system: a folder contains subfolders, which contain more folders.
+Would you like to:
+1. Test your understanding with a quick challenge question?
+2. See another practical application or Python coding example?
+3. Move on to a related topic like Dynamic Programming or Trees?`;
+  }
 
-Diagram
+  // 10. Fallback connecting to previous conversation topic
+  return `Building upon what we just explored regarding **${profile.title}**:
 
-        8
-      /   \\
-     3     10
-    / \\
-   1   6
+You asked: "${userText}"
 
-In a binary search tree, smaller values go left and larger values go right. An in-order traversal visits values in sorted order: 1, 3, 6, 8, 10.
-
-Check: where would the value 5 go in this tree?`;
-  if (prompt.includes("dynamic") || prompt.includes("programming")) return `Dynamic programming
-Dynamic programming solves a large problem by solving smaller repeated problems once and reusing their answers.
-
-If you repeatedly travel between the same stations, you write down the best route once instead of recalculating it every time.
-
-Two questions to ask:
-1. Do subproblems overlap?
-2. Can the best answer be built from smaller answers?
-
-Memoization stores answers while using recursion. Tabulation fills a table from the smallest case upward. The goal is less repeated work.
-
-Check: what repeated subproblem could be cached in a Fibonacci calculation?`;
-  return `Let's break it down
-You asked about ${message}. We can understand it by connecting four pieces:
-
-1. **Idea:** what problem does it solve?
-2. **Analogy:** what familiar real-world process behaves similarly?
-3. **Example:** what happens with a small input?
-4. **Trade-off:** when is it useful, and what does it cost?
-
-Start with a small example and trace each step. Tell me your current level or share a specific example, and I will explain it with a diagram and code walkthrough.`;
+Here is how this connects to **${profile.title}**:
+1. **Core Invariant:** In ${profile.title}, every operation relies on maintaining structural rules and breaking problems down.
+2. **Context Connection:** What we previously discussed about ${profile.title} directly applies here.
+3. **Next Step:** Would you like to see a targeted Python code trace, or test yourself with a quick quiz on ${profile.title}?`;
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json() as { messages?: ChatMessage[] };
-    const messages = (body.messages || []).filter(message => message.content?.trim()).slice(-20);
-    if (!messages.length || messages[messages.length - 1].role !== "user") {
+    const body = (await request.json()) as { messages?: ChatMessage[] };
+    const rawMessages = (body.messages || []).filter((message) => message.content?.trim());
+
+    if (!rawMessages.length || rawMessages[rawMessages.length - 1].role !== "user") {
       return Response.json({ error: "Send at least one user message." }, { status: 400 });
     }
 
     const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
-    if (!apiKey) return new Response(demoTutorResponse(messages[messages.length - 1].content), { headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-cache", "X-Tutor-Provider": "demo" } });
 
-    const ai = new GoogleGenAI({ apiKey });
-    const chat = ai.chats.create({
-      model: "gemini-2.5-flash",
-      config: { systemInstruction: systemPrompt, temperature: 0.4 },
-      history: messages.slice(0, -1).map(message => ({ role: message.role, parts: [{ text: message.content }] })),
-    });
-    const stream = await chat.sendMessageStream({ message: messages[messages.length - 1].content });
+    // Try Gemini API if key is present
+    if (apiKey) {
+      try {
+        const ai = new GoogleGenAI({ apiKey });
+
+        // Gemini API rules:
+        // 1. History cannot start with a model message. Strip leading model messages.
+        // 2. Turns must alternate between 'user' and 'model'.
+        let sanitizedHistory: ChatMessage[] = [];
+        let previousRole: string | null = null;
+
+        for (const msg of rawMessages.slice(0, -1)) {
+          if (!sanitizedHistory.length && msg.role === "model") {
+            // Skip leading greeting message from model
+            continue;
+          }
+          if (msg.role === previousRole) {
+            // Append content to avoid consecutive same-role turns
+            sanitizedHistory[sanitizedHistory.length - 1].content += "\n\n" + msg.content;
+          } else {
+            sanitizedHistory.push({ role: msg.role, content: msg.content });
+            previousRole = msg.role;
+          }
+        }
+
+        const chat = ai.chats.create({
+          model: "gemini-2.5-flash",
+          config: { systemInstruction: systemPrompt, temperature: 0.4 },
+          history: sanitizedHistory.map((m) => ({
+            role: m.role,
+            parts: [{ text: m.content }],
+          })),
+        });
+
+        const latestUserMessage = rawMessages[rawMessages.length - 1].content;
+        const stream = await chat.sendMessageStream({ message: latestUserMessage });
+        const encoder = new TextEncoder();
+
+        const readable = new ReadableStream({
+          async start(controller) {
+            try {
+              for await (const chunk of stream) {
+                if (chunk.text) controller.enqueue(encoder.encode(chunk.text));
+              }
+              controller.close();
+            } catch (streamErr) {
+              controller.error(streamErr);
+            }
+          },
+        });
+
+        return new Response(readable, {
+          headers: {
+            "Content-Type": "text/plain; charset=utf-8",
+            "Cache-Control": "no-cache",
+            "X-Tutor-Provider": "gemini",
+          },
+        });
+      } catch (geminiError) {
+        console.warn("Gemini API call failed, falling back to context engine:", geminiError);
+        // Fall through to context-aware engine below
+      }
+    }
+
+    // Context-Aware Tutor Engine (Handles full chat history, previous topics, and follow-ups)
+    const contextualResponse = generateContextualTutorResponse(rawMessages);
+
+    // Stream the response back in chunks for responsive live typing feel
     const encoder = new TextEncoder();
     const readable = new ReadableStream({
       async start(controller) {
-        try {
-          for await (const chunk of stream) if (chunk.text) controller.enqueue(encoder.encode(chunk.text));
-          controller.close();
-        } catch (error) {
-          controller.error(error);
+        const chunkSize = 32;
+        for (let i = 0; i < contextualResponse.length; i += chunkSize) {
+          const chunk = contextualResponse.slice(i, i + chunkSize);
+          controller.enqueue(encoder.encode(chunk));
+          // Small micro-delay to simulate natural typing speed
+          await new Promise((resolve) => setTimeout(resolve, 8));
         }
+        controller.close();
       },
     });
-    return new Response(readable, { headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-cache" } });
+
+    return new Response(readable, {
+      headers: {
+        "Content-Type": "text/plain; charset=utf-8",
+        "Cache-Control": "no-cache",
+        "X-Tutor-Provider": "digiguide-context-engine",
+      },
+    });
   } catch (error) {
     console.error("Chat route failed", error);
     return Response.json({ error: "The tutor could not respond right now." }, { status: 500 });

@@ -1,0 +1,283 @@
+{
+  "recursion": {
+    "key": "recursion",
+    "title": "Recursion & Call Stack",
+    "keywords": [
+      "recursion",
+      "recursive",
+      "base case",
+      "call stack",
+      "factorial",
+      "backtracking",
+      "recurrence"
+    ],
+    "mainExplanation": "Recursion\n\nRecursion is when a function solves a problem by calling itself on a smaller version of that same problem until it reaches a stopping condition called the base case.\n\nReal-Life Analogy\nImagine opening a set of Russian Matryoshka nesting dolls. You open one doll, find a smaller one inside, and repeat this until you reach the smallest, solid wooden doll that cannot be opened. That solid doll is your base case. Only after reaching it can you begin assembling the outer shells back together.\n\nCall Stack Trace: factorial(3)\n\nfactorial(3)\n  -> 3 * factorial(2)\n       -> 2 * factorial(1)\n            -> 1  (base case reached)\nReturns bubble upward: 1 -> (2 * 1 = 2) -> (3 * 2 = 6).\n\nPython Implementation\n```python\ndef factorial(n: int) -> int:\n    # 1. Base Case: prevents infinite stack overflow\n    if n <= 1:\n        return 1\n    # 2. Recursive Step: moves closer to the base case\n    return n * factorial(n - 1)\n\n# Example usage:\nprint(factorial(3)) # Output: 6\n```\n\nComplexity\n- Time Complexity: O(n) \u2014 exactly n recursive calls are made.\n- Space Complexity: O(n) \u2014 requires n stack frames on the call stack.\n\nCommon Pitfall\nOmitting the base case or failing to decrement/modify the input parameter toward the base case, causing a RecursionError (Stack Overflow).\n\nCheck for Understanding\nWhat would happen if the function called factorial(n) instead of factorial(n - 1)?",
+    "secondExample": "Another Example of Recursion: String Reversal & Countdown\n\nLet's look at another classic recursion problem: reversing a string recursively in Python.\n\nThe Idea\nTo reverse a string like \"DIGI\":\n1. Take the first character \"D\".\n2. Recursively reverse the remainder of the string: reverse(\"IGI\").\n3. Append \"D\" to the end of that reversed result: reverse(\"IGI\") + \"D\".\n\nTrace Diagram\nreverse(\"CAT\")\n  -> reverse(\"AT\") + \"C\"\n       -> reverse(\"T\") + \"A\"\n            -> \"T\" (base case: string length <= 1)\nReturn unwind: \"T\" + \"A\" = \"TA\" -> \"TA\" + \"C\" = \"TAC\".\n\nPython Code\n```python\ndef reverse_string(s: str) -> str:\n    # Base Case: empty or single-character string\n    if len(s) <= 1:\n        return s\n    \n    # Recursive Case: reverse rest of string and append first char\n    return reverse_string(s[1:]) + s[0]\n\nprint(reverse_string(\"GUIDE\")) # Output: \"EDIUG\"\n```\n\nComplexity\n- Time: O(n^2) in Python due to string slicing and concatenation, or O(n) with array indices.\n- Space: O(n) call stack frames.\n\nWould you like to see how to optimize this to O(n) time with a two-pointer recursive approach, or test it with a challenge?",
+    "pythonCode": "Python Recursive Toolkit\n\nHere are essential recursion templates used across data structures:\n\n1. Tree Traversal (Depth-First Search)\n```python\nclass TreeNode:\n    def __init__(self, val=0, left=None, right=None):\n        self.val = val\n        self.left = left\n        self.right = right\n\ndef max_depth(root: TreeNode) -> int:\n    if not root:\n        return 0\n    left_depth = max_depth(root.left)\n    right_depth = max_depth(root.right)\n    return 1 + max(left_depth, right_depth)\n```\n\n2. Tail Recursion vs Standard Recursion\nIn standard recursion, deferred calculations wait on the call stack. In tail-recursive functions, the recursive call is the very last operation.\n\nNotice how the base case guard clause always appears at the very beginning of the function body.",
+    "complexityExplanation": "Complexity Analysis for Recursion\n\n1. Time Complexity\nDetermined by: (Number of recursive calls) * (Work done per call).\n- Linear recursion (e.g. factorial, string reverse): n calls * O(1) work = O(n) time.\n- Branching recursion (e.g. naive Fibonacci fib(n) = fib(n-1) + fib(n-2)): 2^n calls = O(2^n) exponential time.\n- Divide and conquer (e.g. binary search, merge sort): T(n) = 2T(n/2) + O(n) = O(n log n).\n\n2. Space Complexity (The Call Stack)\nEven without allocating arrays, recursion consumes auxiliary space on the process call stack proportional to the maximum recursion depth.\n- Maximum recursion depth of n frames = O(n) memory.\n- In Python, sys.getrecursionlimit() defaults to 1000. Exceeding this triggers RecursionError: maximum recursion depth exceeded.",
+    "quizQuestions": "Here is a quick practice set on Recursion:\n\n1. In recursive Fibonacci fib(n) = fib(n-1) + fib(n-2), what causes the O(2^n) exponential slowdown?\n2. What is the difference between the call stack space in recursive binary search vs iterative binary search?\n3. In Backtracking (e.g. generating subsets), what step happens immediately after the recursive call returns?\n\nReply with your thoughts and I will evaluate your answers step by step.",
+    "checkAnswers": [
+      {
+        "keywords": [
+          "endless",
+          "crash",
+          "what would happen",
+          "never reach",
+          "loop",
+          "no base case",
+          "exceed",
+          "stack",
+          "what happens",
+          "overflow",
+          "infinite",
+          "stop"
+        ],
+        "feedback": "Spot on! Exactly right.\n\nIf you call `factorial(n)` instead of `factorial(n - 1)`, the argument never decreases toward the base case `n <= 1`. \nEach call continues spawning identical calls, exhausting the system call stack until Python throws a `RecursionError: maximum recursion depth exceeded` (Stack Overflow).\n\nThat is why every recursive step must strictly move closer to satisfying the base condition.\n\nWhat would you like to explore next about recursion \u2014 memoization to avoid redundant calls, or tree recursion?"
+      }
+    ]
+  },
+  "dynamic_programming": {
+    "key": "dynamic_programming",
+    "title": "Dynamic Programming & Memoization",
+    "keywords": [
+      "dynamic programming",
+      "dp",
+      "memoization",
+      "tabulation",
+      "subproblem",
+      "optimal substructure",
+      "overlapping",
+      "knapsack",
+      "coin change",
+      "fibonacci"
+    ],
+    "mainExplanation": "Dynamic Programming\n\nDynamic Programming (DP) is an optimization technique that solves complex problems by breaking them down into simpler subproblems, solving each subproblem once, and storing their solutions to avoid redundant recalculation.\n\nReal-Life Analogy\nImagine walking into a room and someone writes 1 + 1 + 1 + 1 + 1 on the whiteboard. They ask, \"What is that?\"\nYou count and say, \"5.\"\nThen they write another \"+ 1\" at the end and ask, \"What is it now?\"\nYou immediately answer \"6\" without recounting from scratch because you *remembered* the previous subproblem was 5, and simply added 1. That is dynamic programming.\n\nThe Two Core Properties of DP\n1. Overlapping Subproblems: The same calculations are needed repeatedly (e.g., in fib(5), fib(3) is calculated twice).\n2. Optimal Substructure: The optimal solution to the problem can be constructed from optimal solutions to its subproblems.\n\nTop-Down (Memoization) vs Bottom-Up (Tabulation)\n- Top-Down: Start with the original problem, use recursion, and cache results in a dictionary or array.\n- Bottom-Up: Start from the smallest base cases and fill up an array iteratively.\n\nPython Example: Fibonacci with Memoization\n```python\ndef fib_memo(n: int, memo: dict = None) -> int:\n    if memo is None:\n        memo = {}\n    if n in memo:\n        return memo[n] # Return cached subproblem\n    if n <= 1:\n        return n\n    \n    memo[n] = fib_memo(n - 1, memo) + fib_memo(n - 2, memo)\n    return memo[n]\n\nprint(fib_memo(50)) # Computes instantly in O(n)\n```\n\nComplexity\n- Time: O(n) instead of naive recursion's O(2^n).\n- Space: O(n) for the hash table plus O(n) call stack.\n\nCheck for Understanding\nWhat repeated subproblem is computed when calculating Fibonacci(5) naively?",
+    "secondExample": "Another DP Example: The Climbing Stairs Problem\n\nProblem Statement\nYou are climbing a staircase with n steps. You can climb either 1 step or 2 steps each time. In how many distinct ways can you reach the top?\n\nSubproblem Formulation\nTo reach step n, you must have come from either:\n- Step n - 1 (taking a 1-step hop), or\n- Step n - 2 (taking a 2-step hop).\n\nTherefore: ways(n) = ways(n - 1) + ways(n - 2).\nBase cases: ways(1) = 1, ways(2) = 2.\n\nBottom-Up DP Table (Tabulation) in Python\n```python\ndef climb_stairs(n: int) -> int:\n    if n <= 2:\n        return n\n    \n    # dp[i] represents distinct ways to reach step i\n    dp = [0] * (n + 1)\n    dp[1] = 1\n    dp[2] = 2\n    \n    for i in range(3, n + 1):\n        dp[i] = dp[i - 1] + dp[i - 2]\n        \n    return dp[n]\n\n# Space-optimized version O(1) space:\ndef climb_stairs_optimized(n: int) -> int:\n    if n <= 2: return n\n    prev2, prev1 = 1, 2\n    for _ in range(3, n + 1):\n        prev2, prev1 = prev1, prev2 + prev1\n    return prev1\n```\n\nComplexity\n- Time: O(n)\n- Space: O(1) in the optimized version!",
+    "pythonCode": "Dynamic Programming Python Patterns\n\n1. Using Python's Built-in @functools.lru_cache\n```python\nfrom functools import lru_cache\n\n@lru_cache(maxsize=None)\ndef coin_change(amount: int, coins: tuple) -> int:\n    if amount == 0:\n        return 0\n    if amount < 0:\n        return float('inf')\n    \n    return 1 + min(coin_change(amount - c, coins) for c in coins)\n```\n\n2. 2D DP Grid Pattern (e.g. Unique Paths)\n```python\ndef unique_paths(m: int, n: int) -> int:\n    dp = [[1] * n for _ in range(m)]\n    for r in range(1, m):\n        for c in range(1, n):\n            dp[r][c] = dp[r-1][c] + dp[r][c-1]\n    return dp[m-1][n-1]\n```",
+    "complexityExplanation": "Dynamic Programming Complexity Framework\n\n1. Time Complexity\nFormula: Time = (Number of Unique Subproblems) * (Work done per subproblem)\n- 1D DP (Fibonacci, Climbing Stairs): n states * O(1) transitions = O(n) time.\n- 2D DP (Longest Common Subsequence, Grid paths): (m * n) states * O(1) work = O(m * n) time.\n- Knapsack Problem (weight W, items N): N * W states = O(N * W) pseudo-polynomial time.\n\n2. Space Complexity\n- Top-down: O(States) table + O(Recursion Depth) call stack.\n- Bottom-up: O(States) table.\n- Space Optimization: If a state only depends on the previous row or previous 2 numbers, you can drop the table to O(1) or O(columns) variables.",
+    "quizQuestions": "Dynamic Programming Quiz:\n\n1. When should you choose bottom-up tabulation over top-down memoization?\n2. In the 0/1 Knapsack problem, why does the 1D space-optimized loop need to iterate backwards?\n3. How do you distinguish a problem that requires DP from one solvable with a greedy algorithm?\n\nSend your answers to test your mastery!",
+    "checkAnswers": [
+      {
+        "keywords": [
+          "recalculated",
+          "what subproblem",
+          "overlap",
+          "twice",
+          "fib(3)",
+          "what repeated",
+          "fib 3",
+          "which subproblem",
+          "recomputed",
+          "fib(2)",
+          "fib 2"
+        ],
+        "feedback": "Excellent observation! You nailed it.\n\nIn naive Fibonacci `fib(5)`:\n- `fib(5)` calls `fib(4)` and `fib(3)`.\n- `fib(4)` calls `fib(3)` and `fib(2)`.\nNotice that `fib(3)` is computed independently twice! And inside each of those branches, `fib(2)` is computed 3 separate times.\n\nBy caching the result of `fib(3)` the first time it is computed, DP cuts the execution tree from exponential O(2^n) down to linear O(n).\n\nWould you like to see how Tabulation fills this iteratively, or try a practice DP problem?"
+      }
+    ]
+  },
+  "trees": {
+    "key": "trees",
+    "title": "Trees & Binary Search Trees (BST)",
+    "keywords": [
+      "tree",
+      "trees",
+      "bst",
+      "binary search tree",
+      "traversal",
+      "in-order",
+      "pre-order",
+      "post-order",
+      "root",
+      "leaf",
+      "lca",
+      "height",
+      "depth"
+    ],
+    "mainExplanation": "Trees & Binary Search Trees\n\nA tree is a non-linear hierarchical data structure composed of nodes connected by edges, starting from a single root node.\n\nReal-Life Analogy\nA corporate organizational hierarchy: the CEO is the root node, Vice Presidents are child nodes, and individual contributors with no direct reports are leaf nodes. Another familiar example is the directory and folder system on your computer.\n\nBinary Search Tree (BST) Invariant\nA Binary Search Tree is a binary tree where for every node:\n- All values in its LEFT subtree are strictly LESS than the node's value.\n- All values in its RIGHT subtree are strictly GREATER than the node's value.\n\nDiagram\n        8\n      /   \\\n     3     10\n    / \\      \\\n   1   6      14\n\nIn-Order Traversal (Left, Root, Right)\nVisiting the nodes above in-order: 1 -> 3 -> 6 -> 8 -> 10 -> 14.\nNotice that in-order traversal on a BST produces values in strictly sorted ascending order!\n\nPython Node Definition & Search\n```python\nclass TreeNode:\n    def __init__(self, val=0, left=None, right=None):\n        self.val = val\n        self.left = left\n        self.right = right\n\ndef search_bst(root: TreeNode, target: int) -> TreeNode:\n    if not root or root.val == target:\n        return root\n    if target < root.val:\n        return search_bst(root.left, target)\n    return search_bst(root.right, target)\n```\n\nComplexity\n- Balanced BST: O(log n) search, insert, delete.\n- Skewed BST (like a linked list): O(n) worst case.\n- Space Complexity: O(h) where h is the tree height.\n\nCheck for Understanding\nWhere would a new value '5' be placed in the tree shown above?",
+    "secondExample": "Another Tree Example: Maximum Depth of Binary Tree in Python\n\nProblem Statement\nFind the maximum number of nodes along the longest path from the root node down to the farthest leaf node.\n\nRecursive Formulation\nThe depth of any node is: 1 + max(depth(left_child), depth(right_child)).\nBase case: An empty tree has depth 0.\n\nVisual Step-by-Step\n      3          Depth = 1 + max(depth(9), depth(20))\n     / \\               = 1 + max(1, 2) = 3\n    9  20\n       /  \\\n      15   7\n\nPython Code\n```python\ndef max_depth(root: TreeNode) -> int:\n    if not root:\n        return 0\n    return 1 + max(max_depth(root.left), max_depth(root.right))\n```\n\nComplexity\n- Time: O(n) \u2014 visits each node exactly once.\n- Space: O(h) where h is height (O(log n) balanced, O(n) worst-case).",
+    "pythonCode": "Tree Traversals Implementation in Python\n\n```python\n# 1. In-Order: Left -> Root -> Right (Sorted order for BST)\ndef inorder(root: TreeNode) -> list[int]:\n    return inorder(root.left) + [root.val] + inorder(root.right) if root else []\n\n# 2. Pre-Order: Root -> Left -> Right (Good for serialization/copying)\ndef preorder(root: TreeNode) -> list[int]:\n    return [root.val] + preorder(root.left) + preorder(root.right) if root else []\n\n# 3. Post-Order: Left -> Right -> Root (Good for deletion/bottom-up calculations)\ndef postorder(root: TreeNode) -> list[int]:\n    return postorder(root.left) + postorder(root.right) + [root.val] if root else []\n\n# 4. Breadth-First Search (Level Order)\nfrom collections import deque\n\ndef level_order(root: TreeNode) -> list[list[int]]:\n    if not root: return []\n    levels, queue = [], deque([root])\n    while queue:\n        level = []\n        for _ in range(len(queue)):\n            node = queue.popleft()\n            level.append(node.val)\n            if node.left: queue.append(node.left)\n            if node.right: queue.append(node.right)\n        levels.append(level)\n    return levels\n```",
+    "complexityExplanation": "Tree Complexity Breakdown\n\n1. Height (h) Matters Most:\n- Balanced Tree (AVL, Red-Black): h = ceil(log2(n)). Search is O(log n).\n- Degenerate Tree (sorted input inserted naively): h = n. Tree degrades into a linked list, search degrades to O(n).\n\n2. Traversal Complexity:\n- Time: Always O(n) since every node must be visited.\n- Space: O(h) auxiliary stack frames. For balanced trees, this is O(log n).\n\n3. BFS vs DFS Memory Trade-off:\n- DFS uses space proportional to tree height: O(h).\n- BFS uses space proportional to maximum tree width: O(w) = up to O(n/2) for full binary trees.",
+    "quizQuestions": "Tree & BST Practice Questions:\n\n1. How can you validate whether a given binary tree is a valid Binary Search Tree?\n2. What traversal order reconstructs a unique binary tree when combined with in-order traversal?\n3. What is the Lowest Common Ancestor (LCA) of nodes 1 and 6 in the example tree?\n\nShare your reasoning and we'll analyze it!",
+    "checkAnswers": [
+      {
+        "keywords": [
+          "where does 5",
+          "position of 5",
+          "child of 6",
+          "where would 5",
+          "6's left",
+          "place 5",
+          "left under 6",
+          "left of 6",
+          "under 6",
+          "left sub",
+          "left child of 6"
+        ],
+        "feedback": "Spot on! Exactly right.\n\nStarting at root 8:\n1. 5 < 8 -> go to left child (3).\n2. 5 > 3 -> go to right child (6).\n3. 5 < 6 -> go to left child of 6. Since that spot is empty, 5 becomes the left child of 6!\n\nDiagram update:\n        8\n      /   \\\n     3     10\n    / \\      \\\n   1   6      14\n      /\n     5\n\nGreat structural intuition! Would you like to practice tree traversals or balance properties next?"
+      }
+    ]
+  },
+  "linked_lists": {
+    "key": "linked_lists",
+    "title": "Linked Lists & Pointers",
+    "keywords": [
+      "linked list",
+      "linked-list",
+      "singly linked",
+      "doubly linked",
+      "nodes",
+      "head pointer",
+      "fast and slow",
+      "cycle detection",
+      "reverse linked list"
+    ],
+    "mainExplanation": "Linked Lists\n\nA linked list is a linear data structure where elements are not stored in contiguous memory locations. Instead, each element (called a Node) contains data and a pointer (reference) pointing to the next node in the sequence.\n\nReal-Life Analogy\nA scavenger hunt: each clue you find contains a message and the address to the next clue. You cannot magically jump to Clue #5 without following the chain of clues from Clue #1.\n\nDiagram\nhead\n  |\n  v\n[ 10 | next ] -> [ 20 | next ] -> [ 30 | null ]\n\nKey Differences from Arrays:\n- Array: Contiguous memory. Instant random access O(1) by index, but costly insertions/deletions O(n).\n- Linked List: Scattered memory. Dynamic size and O(1) insertions/deletions once you hold the pointer, but sequential access O(n) to find an index.\n\nPython Node & Reversal\n```python\nclass ListNode:\n    def __init__(self, val=0, next=None):\n        self.val = val\n        self.next = next\n\ndef reverse_list(head: ListNode) -> ListNode:\n    prev = None\n    curr = head\n    while curr:\n        nxt = curr.next   # 1. Save next node\n        curr.next = prev  # 2. Reverse link\n        prev = curr       # 3. Step prev forward\n        curr = nxt        # 4. Step curr forward\n    return prev           # prev is the new head\n```\n\nComplexity\n- Access/Search by index: O(n)\n- Insertion/Deletion at head: O(1)\n- Space: O(n) with extra memory per node for pointer references.\n\nCheck for Understanding\nIf you only have a reference to the head node, how many nodes must you inspect in the worst case to find the last node?",
+    "secondExample": "Another Linked List Pattern: Fast and Slow Pointers (Floyd's Cycle Detection) in Python\n\nProblem Statement\nDetermine if a linked list contains a cycle (a loop where a node points back to an earlier node in the list).\n\nThe Tortoise and Hare Analogy\nImagine two runners on a circular race track. If one runs at 1 meter/second and the other runs at 2 meters/second, the faster runner will inevitably lap the slower runner from behind. If there is no loop, the fast runner simply crosses the finish line (null).\n\nDiagram\n[ 1 ] -> [ 2 ] -> [ 3 ] -> [ 4 ]\n           ^                 |\n           |-----------------|  (Cycle back to 2)\n\nPython Implementation\n```python\ndef has_cycle(head: ListNode) -> bool:\n    slow = fast = head\n    while fast and fast.next:\n        slow = slow.next          # moves 1 step\n        fast = fast.next.next     # moves 2 steps\n        if slow == fast:\n            return True           # Cycle detected!\n    return False                  # Reached end (null), no cycle\n```\n\nComplexity\n- Time: O(n)\n- Space: O(1) auxiliary space!",
+    "pythonCode": "Linked List Essential Operations in Python\n\n```python\n# Insert at Head: O(1)\ndef insert_head(head: ListNode, val: int) -> ListNode:\n    return ListNode(val, head)\n\n# Delete node with value target: O(n) search, O(1) unlink\ndef delete_node(head: ListNode, target: int) -> ListNode:\n    dummy = ListNode(0, head)\n    curr = dummy\n    while curr.next:\n        if curr.next.val == target:\n            curr.next = curr.next.next\n            break\n        curr = curr.next\n    return dummy.next\n\n# Find Middle Node using Two Pointers: O(n)\ndef find_middle(head: ListNode) -> ListNode:\n    slow = fast = head\n    while fast and fast.next:\n        slow = slow.next\n        fast = fast.next.next\n    return slow\n```",
+    "complexityExplanation": "Linked List vs Array Complexity Matrix\n\nOperation            | Array (Contiguous) | Linked List (Node/Pointer)\n---------------------|--------------------|----------------------------\nAccess by Index [k]  | O(1) [Instant]     | O(k) [Sequential walk]\nInsert at Beginning  | O(n) [Must shift]  | O(1) [Update head pointer]\nInsert at End (tail) | O(1) amortized     | O(1) if tail stored, else O(n)\nDelete at Head       | O(n) [Must shift]  | O(1)\nMemory Overhead      | Low (Pure values)  | High (Extra 8 bytes/pointer)\nCache Locality       | Excellent (L1/L2)  | Poor (Scattered pointers)",
+    "quizQuestions": "Linked List Quiz:\n\n1. Why is binary search NOT efficient on a standard singly linked list?\n2. In reversing a singly linked list, what happens if you forget to save curr.next before reassigning curr.next = prev?\n3. What is a \"dummy head\" node and why does it simplify edge cases?\n\nShare your answers!",
+    "checkAnswers": [
+      {
+        "keywords": [
+          "every",
+          "traverse",
+          "o(n)",
+          "all",
+          "n nodes",
+          "entire list",
+          "how many",
+          "all nodes",
+          "walk through",
+          "all of them",
+          "all n"
+        ],
+        "feedback": "Precisely correct! \n\nBecause a singly linked list only stores forward pointers and elements are not indexed consecutively in memory, you must traverse all n nodes from head to tail to locate the last node: O(n) time.\n\nTo make finding the last node O(1), systems maintain a separate `tail` pointer reference alongside the `head` pointer.\n\nWould you like to see how Doubly Linked Lists or Dummy Nodes simplify edge cases?"
+      }
+    ]
+  },
+  "binary_search": {
+    "key": "binary_search",
+    "title": "Binary Search & Logarithmic Time",
+    "keywords": [
+      "binary search",
+      "binary-search",
+      "divide and conquer",
+      "log n",
+      "sorted array",
+      "search space"
+    ],
+    "mainExplanation": "Binary Search\n\nBinary search is an efficient algorithm for finding the position of a target value within a SORTED array by repeatedly halving the search interval.\n\nReal-Life Analogy\nLooking up a word in a printed physical dictionary: you don't read from page 1. You open the book roughly in the middle. If your word starts with \"T\" and the page is on \"M\", you know for certain that the entire left half can be discarded. You repeat this on the right half.\n\nDiagram & Step-by-Step\nArray: [ 2, 5, 8, 12, 17, 21, 30 ], Target: 17\nIndices: 0  1  2   3   4   5   6\n\nStep 1: low = 0, high = 6 -> mid = (0 + 6) // 2 = 3. Value = 12.\nSince 17 > 12, discard left half: low = mid + 1 = 4.\n\nStep 2: low = 4, high = 6 -> mid = (4 + 6) // 2 = 5. Value = 21.\nSince 17 < 21, discard right half: high = mid - 1 = 4.\n\nStep 3: low = 4, high = 4 -> mid = 4. Value = 17 == Target! Found at index 4.\n\nPython Implementation\n```python\ndef binary_search(nums: list[int], target: int) -> int:\n    low = 0\n    high = len(nums) - 1\n    \n    while low <= high:\n        mid = low + (high - low) // 2 # Prevents integer overflow\n        if nums[mid] == target:\n            return mid\n        elif nums[mid] < target:\n            low = mid + 1\n        else:\n            high = mid - 1\n            \n    return -1 # Target not found\n```\n\nComplexity\n- Time Complexity: O(log n) \u2014 cuts search space in half each iteration.\n- Space Complexity: O(1) iterative, O(log n) recursive.\n\nCheck for Understanding\nWhat is the strict prerequisite that must be satisfied before binary search can be applied?",
+    "secondExample": "Another Binary Search Application: Search in a Rotated Sorted Array in Python\n\nProblem Statement\nAn array sorted in ascending order is rotated at an unknown pivot (e.g. [4, 5, 6, 7, 0, 1, 2]). Find target in O(log n) time.\n\nThe Key Insight\nEven when rotated, at least one half of the array (either left or right) is ALWAYS normally sorted!\n1. Check which half is sorted.\n2. Check if the target lies within the range of that sorted half.\n3. If yes, search that half; otherwise search the other half.\n\nPython Code\n```python\ndef search_rotated(nums: list[int], target: int) -> int:\n    low, high = 0, len(nums) - 1\n    while low <= high:\n        mid = low + (high - low) // 2\n        if nums[mid] == target:\n            return mid\n        \n        # Check if left half is normally sorted\n        if nums[low] <= nums[mid]:\n            if nums[low] <= target < nums[mid]:\n                high = mid - 1\n            else:\n                low = mid + 1\n        else: # Right half is sorted\n            if nums[mid] < target <= nums[high]:\n                low = mid + 1\n            else:\n                high = mid - 1\n    return -1\n```",
+    "pythonCode": "Binary Search Python Variants\n\n1. Lower Bound (First occurrence or insertion index):\n```python\ndef lower_bound(nums: list[int], target: int) -> int:\n    low, high = 0, len(nums)\n    while low < high:\n        mid = low + (high - low) // 2\n        if nums[mid] < target:\n            low = mid + 1\n        else:\n            high = mid\n    return low\n```\n\n2. Python's Standard Library bisect\n```python\nimport bisect\n\nnums = [1, 3, 5, 7, 9]\nidx = bisect.bisect_left(nums, 5) # Output: 2\n```",
+    "complexityExplanation": "Logarithmic Complexity: Why O(log n) is so Fast\n\nEvery time you double the input size n, binary search requires only 1 additional step!\n\nArray Size (n) | Linear Search O(n) | Binary Search O(log2 n)\n---------------|--------------------|------------------------\n16             | 16 checks          | 4 checks\n1,024 (1 KB)   | 1,024 checks       | 10 checks\n1,000,000 (1M) | 1,000,000 checks   | 20 checks\n1,000,000,000  | 1 billion checks   | 30 checks\n\nAt 1 billion items, binary search finds the element in just 30 comparisons!",
+    "quizQuestions": "Binary Search Quiz:\n\n1. Why is mid = low + (high - low) // 2 preferred over mid = (low + high) // 2 in languages like C++/Java?\n2. If an array has 64 elements, what is the maximum number of comparisons binary search could make?\n3. How can binary search be used on continuous answer spaces (Binary Search on Answer)?",
+    "checkAnswers": [
+      {
+        "keywords": [
+          "must be sorted",
+          "sorted",
+          "prerequisite",
+          "ordered",
+          "ascending",
+          "condition",
+          "monotonic",
+          "in order",
+          "sort"
+        ],
+        "feedback": "Exactly right! The collection must be SORTED (monotonic).\n\nIf the elements are unordered, you cannot determine whether the target lies in the left or right partition after inspecting the midpoint, invalidating the divide-and-conquer assumption.\n\nWhen the input is unsorted, linear search O(n) or sorting first O(n log n) is required.\n\nReady for a binary search challenge problem, or would you like to explore binary search on answer spaces?"
+      }
+    ]
+  },
+  "arrays": {
+    "key": "arrays",
+    "title": "Arrays & Two Pointers",
+    "keywords": [
+      "array",
+      "arrays",
+      "two pointers",
+      "sliding window",
+      "prefix sum",
+      "kadane",
+      "subarray"
+    ],
+    "mainExplanation": "Arrays & Two Pointers\n\nAn array is a contiguous block of memory storing elements of the same type at sequential, zero-indexed positions.\n\nMemory Model\nBecause elements sit side-by-side at fixed byte offsets, accessing array[i] uses the formula:\nAddress = BaseAddress + (index * element_size)\nThis gives arrays instant O(1) random access by index.\n\nThe Two Pointers Technique\nInstead of using nested loops O(n^2), two pointers traverse the array toward each other or in parallel to solve problems in linear O(n) time.\n\nClassic Problem: Two Sum in a Sorted Array\nGiven a sorted array, find two numbers that add up to target.\n\nPython Two Pointers Implementation\n```python\ndef two_sum_sorted(nums: list[int], target: int) -> list[int]:\n    left = 0\n    right = len(nums) - 1\n    \n    while left < right:\n        current_sum = nums[left] + nums[right]\n        if current_sum == target:\n            return [left, right]\n        elif current_sum < target:\n            left += 1  # Need larger sum, move left pointer right\n        else:\n            right -= 1 # Need smaller sum, move right pointer left\n            \n    return []\n```\n\nComplexity\n- Time Complexity: O(n) \u2014 each element is inspected at most once.\n- Space Complexity: O(1) auxiliary space.\n\nCheck for Understanding\nWhy does inserting an element at index 0 of an array take O(n) time, whereas appending at the end is O(1)?",
+    "secondExample": "Another Two Pointers Pattern: Sliding Window (Max Subarray Sum of Size K)\n\nProblem Statement\nFind the maximum sum of any contiguous subarray of size k in Python.\n\nThe Window Mental Model\nThink of a physical window sliding along a conveyor belt: as the window advances one step to the right, you add the new incoming element and subtract the outgoing element left behind. You never recalculate the whole window sum from scratch.\n\nPython Code\n```python\ndef max_sub_array_of_size_k(k: int, nums: list[int]) -> int:\n    if len(nums) < k: return 0\n    window_sum = sum(nums[:k])\n    max_sum = window_sum\n    \n    for i in range(k, len(nums)):\n        window_sum += nums[i] - nums[i - k] # Add incoming, drop outgoing\n        max_sum = max(max_sum, window_sum)\n        \n    return max_sum\n\nprint(max_sub_array_of_size_k(3, [2, 1, 5, 1, 3, 2])) # Output: 9 (5+1+3)\n```\n\nComplexity: O(n) time and O(1) space!",
+    "pythonCode": "Array Manipulations in Python\n\n```python\n# 1. In-place Removal of Duplicates from Sorted Array\ndef remove_duplicates(nums: list[int]) -> int:\n    if not nums: return 0\n    write = 1\n    for read in range(1, len(nums)):\n        if nums[read] != nums[read - 1]:\n            nums[write] = nums[read]\n            write += 1\n    return write\n\n# 2. Kadane's Algorithm for Maximum Subarray Sum: O(n)\ndef max_sub_array(nums: list[int]) -> int:\n    max_so_far = current_max = nums[0]\n    for x in nums[1:]:\n        current_max = max(x, current_max + x)\n        max_so_far = max(max_so_far, current_max)\n    return max_so_far\n```",
+    "complexityExplanation": "Array Time and Space Complexity\n\nOperation            | Time Complexity | Why\n---------------------|-----------------|---------------------------------\nIndex lookup a[i]    | O(1)            | Direct memory address arithmetic\nAppend at end        | O(1) amortized  | Placed in allocated capacity\nInsert at index 0    | O(n)            | All n elements must shift right\nDelete at index 0    | O(n)            | All n elements must shift left\nSearch unsorted      | O(n)            | Must inspect each element\nSearch sorted        | O(log n)        | Binary Search",
+    "quizQuestions": "Array Challenge Questions:\n\n1. How does Python's dynamic list handle capacity reallocation behind the scenes?\n2. In Kadane's algorithm, what does the decision max(x, current_max + x) represent?\n3. How do you distinguish when to use Sliding Window vs Two Pointers?",
+    "checkAnswers": [
+      {
+        "keywords": [
+          "must shift",
+          "have to shift",
+          "slide",
+          "push",
+          "elements shift",
+          "relocate",
+          "shifting",
+          "move",
+          "shift"
+        ],
+        "feedback": "Bingo! Exactly right.\n\nBecause an array's elements occupy contiguous memory cells, inserting an element at index 0 requires shifting every existing element one index to the right to make room:\n[A, B, C] -> [_, A, B, C] -> [New, A, B, C]\nThis shift operation takes O(n) time.\n\nAppending at the end takes O(1) because no existing elements need to move.\n\nWould you like to explore Two Pointers, Sliding Window, or Prefix Sums next?"
+      }
+    ]
+  },
+  "memoization": {
+    "key": "memoization",
+    "title": "Memoization & Cache Architecture",
+    "keywords": [
+      "memoization",
+      "memoize",
+      "cache",
+      "lru",
+      "caching",
+      "lookup table"
+    ],
+    "mainExplanation": "Memoization\n\nMemoization is a specific form of caching where the return value of an expensive pure function is remembered based on its input arguments, so future calls with the same arguments return the cached result instantly.\n\nReal-Life Analogy\nMultiplication flashcards: the first time a child calculates 7 * 8, they might do repeated addition (7 + 7 + 7...). Once they commit 56 to memory, whenever they see \"7 * 8\", they immediately recall \"56\" from their mental lookup table without doing the arithmetic.\n\nDifference Between Memoization and Tabulation\n- Memoization: Top-Down. Uses recursion and lazily evaluates only the subproblems required.\n- Tabulation: Bottom-Up. Uses iteration and eagerly computes all subproblems from smallest to largest.\n\nPython Implementation with a Dictionary\n```python\ndef memoize(func):\n    cache = {}\n    def wrapper(*args):\n        if args not in cache:\n            cache[args] = func(*args)\n        return cache[args]\n    return wrapper\n\n@memoize\ndef compute_heavy(n: int) -> int:\n    if n <= 1: return n\n    return compute_heavy(n - 1) + compute_heavy(n - 2)\n```\n\nComplexity\n- Time: Reduces exponential tree branches O(2^n) to linear O(n).\n- Space: O(n) auxiliary hash table memory.",
+    "secondExample": "LRU Cache (Least Recently Used) Architecture in Python\n\nWhen memory is limited, a cache cannot grow forever. An LRU Cache discards the least recently accessed items when capacity is reached.\n\nData Structure Recipe: Hash Map + Doubly Linked List\n- Hash Map: Provides O(1) lookup to find the node.\n- Doubly Linked List: Provides O(1) removal and insertion to move accessed nodes to the front.\n\nPython Standard Library\n```python\nfrom functools import lru_cache\n\n@lru_cache(maxsize=128)\ndef get_user_data(user_id: int):\n    # Simulates an expensive database query\n    return {\"id\": user_id, \"score\": 100}\n```",
+    "pythonCode": "Manual LRU Cache in Python\n\n```python\nclass Node:\n    def __init__(self, key: int, val: int):\n        self.key, self.val = key, val\n        self.prev = self.next = None\n\nclass LRUCache:\n    def __init__(self, capacity: int):\n        self.cap = capacity\n        self.cache = {} # key -> Node\n        self.left, self.right = Node(0, 0), Node(0, 0)\n        self.left.next = self.right\n        self.right.prev = self.left\n\n    def get(self, key: int) -> int:\n        if key in self.cache:\n            self.remove(self.cache[key])\n            self.insert(self.cache[key])\n            return self.cache[key].val\n        return -1\n```",
+    "complexityExplanation": "Cache Complexity & Memory Footprint\n\n- Cache Hit: O(1) lookup.\n- Cache Miss: O(1) computation + O(1) insert.\n- Space: Proportional to the number of distinct parameter combinations cached.\n- Note: Memoized functions MUST be \"pure\" \u2014 they must produce the identical output given identical input with zero side effects.",
+    "quizQuestions": "Memoization Questions:\n\n1. Why will memoizing a function that depends on global mutable state produce subtle bugs?\n2. What are the key performance differences between recursion with memoization vs iterative tabulation?",
+    "checkAnswers": []
+  },
+  "graphs": {
+    "key": "graphs",
+    "title": "Graphs, BFS & DFS",
+    "keywords": [
+      "graph",
+      "graphs",
+      "bfs",
+      "dfs",
+      "dijkstra",
+      "adjacency list",
+      "topological sort",
+      "cycle in graph"
+    ],
+    "mainExplanation": "Graphs: Nodes & Connections\n\nA graph is a network of vertices (nodes) connected by edges. Unlike trees, graphs can contain cycles and have multiple paths between nodes.\n\nReal-Life Analogy\nSocial networks: people are vertices, and friendship connections are edges. Flights between airport hubs or city road networks are also classic graphs.\n\nRepresentations: Adjacency List vs Matrix\n```python\n# Adjacency List (memory efficient for sparse graphs):\ngraph = {\n    'A': ['B', 'C'],\n    'B': ['A', 'D', 'E'],\n    'C': ['A', 'F'],\n    'D': ['B'],\n    'E': ['B', 'F'],\n    'F': ['C', 'E']\n}\n```\n\nBreadth-First Search (BFS) vs Depth-First Search (DFS)\n- BFS: Uses a Queue (FIFO). Explores layer by layer. Guarantees the shortest path in unweighted graphs.\n- DFS: Uses a Stack (LIFO / Recursion). Explores as deep as possible before backtracking.\n\nPython BFS Implementation\n```python\nfrom collections import deque\n\ndef bfs_shortest_path(graph: dict, start: str, target: str) -> list[str]:\n    queue = deque([[start]])\n    visited = {start}\n    \n    while queue:\n        path = queue.popleft()\n        node = path[-1]\n        if node == target:\n            return path\n        for neighbor in graph.get(node, []):\n            if neighbor not in visited:\n                visited.add(neighbor)\n                queue.append(path + [neighbor])\n    return []\n```\n\nComplexity: O(V + E) time, O(V) space.",
+    "secondExample": "Depth-First Search (DFS) Cycle Detection in Directed Graphs in Python\n\nUsing 3-color marking (White = unvisited, Gray = visiting/in call stack, Black = completed).\nIf a DFS encounters a Gray node, a cycle exists!\n\nPython Code:\n```python\ndef has_cycle(num_nodes: int, edges: list[tuple]) -> bool:\n    adj = {i: [] for i in range(num_nodes)}\n    for u, v in edges: adj[u].append(v)\n    \n    visited = [0] * num_nodes # 0: unvisited, 1: visiting, 2: visited\n    \n    def dfs(u):\n        visited[u] = 1\n        for v in adj[u]:\n            if visited[v] == 1: return True # Cycle found\n            if visited[v] == 0 and dfs(v): return True\n        visited[u] = 2\n        return False\n        \n    return any(dfs(i) for i in range(num_nodes) if visited[i] == 0)\n```",
+    "pythonCode": "Graph Algorithms in Python: Dijkstra's Shortest Path\n\n```python\nimport heapq\n\ndef dijkstra(graph: dict, start: str) -> dict:\n    distances = {node: float('inf') for node in graph}\n    distances[start] = 0\n    pq = [(0, start)]\n    \n    while pq:\n        curr_dist, u = heapq.heappop(pq)\n        if curr_dist > distances[u]: continue\n        \n        for neighbor, weight in graph[u]:\n            dist = curr_dist + weight\n            if dist < distances[neighbor]:\n                distances[neighbor] = dist\n                heapq.heappush(pq, (dist, neighbor))\n    return distances\n```",
+    "complexityExplanation": "Graph Algorithm Complexities\n\nAlgorithm           | Data Structure | Time Complexity  | Space\n--------------------|----------------|------------------|-------\nBFS                 | Queue          | O(V + E)         | O(V)\nDFS                 | Stack/Recursion| O(V + E)         | O(V)\nDijkstra's          | Min-Heap (pq)  | O((V + E) log V) | O(V)\nTopological Sort    | Kahn's (Queue) | O(V + E)         | O(V)",
+    "quizQuestions": "Graph Questions:\n\n1. Why does BFS guarantee finding the shortest path in an unweighted graph, but DFS does not?\n2. What algorithm would you use to find the shortest path in a graph with negative edge weights?",
+    "checkAnswers": []
+  },
+  "python": {
+    "key": "python",
+    "title": "Python Data Structures & Complexity",
+    "keywords": [
+      "python",
+      "dict",
+      "set",
+      "list",
+      "generator",
+      "comprehension",
+      "lambda",
+      "time complexity"
+    ],
+    "mainExplanation": "Python DSA Foundations & Complexity\n\nPython provides powerful, high-performance built-in data structures implemented in C under the hood. Understanding their internal architecture is essential for writing efficient algorithms.\n\nCore Built-in Data Structures\n1. List (list): Dynamic array in C.\n   - Access: list[i] is O(1).\n   - Append / Pop: O(1) amortized at the end.\n   - Insert / Pop at index 0: O(n) because memory must shift.\n\n2. Dictionary (dict) & Set (set): Hash Tables.\n   - Average Search, Insert, Delete: O(1).\n   - Worst case: O(n) under heavy hash collisions.\n   - Keys must be immutable (hashable).\n\n3. Double-Ended Queue (collections.deque): Doubly Linked List of memory blocks.\n   - Append / Pop at BOTH ends: O(1).\n   - Fast queue implementation for BFS.\n\nPython Idiomatic Code\n```python\nfrom collections import defaultdict, Counter\n\n# Frequency Map in O(n):\ntext = \"digiguide\"\ncounts = Counter(text)\nprint(counts['i']) # Output: 2\n\n# Grouping with defaultdict:\ngrouped = defaultdict(list)\ngrouped['algorithms'].append('Binary Search')\n```\n\nComplexity Guide\n- item in list: O(n) linear scan!\n- item in set or item in dict: O(1) constant hash lookup!",
+    "secondExample": "List Comprehensions & Generator Memory Efficiency\n\nList Comprehension creates the full list in memory immediately:\n```python\nsquares = [x * x for x in range(1_000_000)] # Allocates ~8 MB of RAM\n```\n\nGenerator Expression computes items lazily on demand:\n```python\nsquares_gen = (x * x for x in range(1_000_000)) # Allocates only ~120 bytes!\nprint(next(squares_gen)) # 0\nprint(next(squares_gen)) # 1\n```\n\nUse generators when streaming large datasets or piping stages in a data pipeline.",
+    "pythonCode": "Python Algorithm Pro-Tips\n\n```python\n# 1. Custom Sorting with lambda:\npairs = [(1, 'apple'), (3, 'banana'), (2, 'cherry')]\npairs.sort(key=lambda item: item[0]) # O(n log n) Timsort\n\n# 2. Heap Queue (Min-Heap):\nimport heapq\nheap = [5, 2, 8, 1]\nheapq.heapify(heap) # O(n) linear time heap construction\nsmallest = heapq.heappop(heap) # 1 in O(log n)\n```",
+    "complexityExplanation": "Python Built-In Complexity Cheat Sheet\n\nOperation                | List       | Set / Dict\n-------------------------|------------|------------\nIndexing: a[i]           | O(1)       | N/A\nSearch: val in a         | O(n)       | O(1) avg\nInsert at end: append    | O(1) amort | O(1) avg\nInsert at start: insert  | O(n)       | O(1) avg\nDelete: remove(val)      | O(n)       | O(1) avg\nIteration over all       | O(n)       | O(n)",
+    "quizQuestions": "Python DSA Quiz:\n\n1. Why should you never use 'in list' inside a loop over n elements?\n2. What sorting algorithm does Python's .sort() and sorted() use internally?",
+    "checkAnswers": []
+  }
+}
