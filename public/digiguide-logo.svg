@@ -1,0 +1,17 @@
+<svg width="260" height="88" viewBox="0 0 260 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="blue" x1="18" y1="8" x2="72" y2="68" gradientUnits="userSpaceOnUse"><stop stop-color="#39D8FF"/><stop offset="1" stop-color="#0878D1"/></linearGradient>
+    <linearGradient id="orange" x1="170" y1="8" x2="226" y2="68" gradientUnits="userSpaceOnUse"><stop stop-color="#FFD05A"/><stop offset="1" stop-color="#F27E21"/></linearGradient>
+  </defs>
+  <g transform="translate(6 6)">
+    <path d="M55 9C38 2 19 11 15 29v18c4 17 23 26 40 19l10-5V15L55 9Z" fill="url(#blue)"/>
+    <path d="M55 9c17-7 36 2 40 20v18c-4 17-23 26-40 19l-10-5V15l10-6Z" fill="url(#orange)"/>
+    <path d="M27 38c9-12 19-17 28-17s19 5 28 17c-9 13-19 19-28 19S36 51 27 38Z" fill="#F4FBFF" stroke="#183D72" stroke-width="3"/>
+    <circle cx="45" cy="38" r="5" fill="#17BFEF"/><circle cx="65" cy="38" r="5" fill="#17BFEF"/>
+    <path d="M48 48c5 4 9 4 14 0" stroke="#183D72" stroke-width="3" stroke-linecap="round"/>
+    <path d="M32 61c10 9 32 9 42 0l19 10H13l19-10Z" fill="#183D72"/>
+  </g>
+  <text x="105" y="43" font-family="Space Grotesk, Arial, sans-serif" font-size="27" font-weight="700" fill="#0878D1">digi</text>
+  <text x="165" y="43" font-family="Space Grotesk, Arial, sans-serif" font-size="27" font-weight="700" fill="#176B46">GUIDE</text>
+  <text x="108" y="64" font-family="DM Sans, Arial, sans-serif" font-size="9" letter-spacing="2" fill="#71817A">LEARNING TWIN</text>
+</svg>
