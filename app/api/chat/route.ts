@@ -7,6 +7,14 @@ const systemPrompt = `You are digiGUIDE, a patient and rigorous computer science
 
 type ChatMessage = { role: "user" | "model"; content: string };
 
+function demoTutorResponse(message: string) {
+  const prompt = message.toLowerCase();
+  if (prompt.includes("quiz")) return "Here is a quick practice set:\n\n1. What is the base case in a recursive function?\n2. Why does memoization improve dynamic programming?\n3. What is the time complexity of binary search?\n\nReply with your answers and I will review them.";
+  if (prompt.includes("recursion")) return "Recursion is when a function solves a problem by calling itself on a smaller version of that problem. Every recursive solution needs a base case to stop and a recursive step to make progress. For example, factorial(n) returns 1 when n is 0, otherwise n * factorial(n - 1).";
+  if (prompt.includes("dynamic") || prompt.includes("programming")) return "Dynamic programming solves problems with overlapping subproblems by storing results and reusing them. A good way to start is: define the state, write the transition, choose a base case, then decide whether memoization or a bottom-up table is clearer.";
+  return `Let us work through this as a computer science problem: "${message}". Start by defining the inputs and expected output, then identify a small example and the invariant that should remain true. I can help you go deeper step by step. Add GEMINI_API_KEY to .env.local for full Gemini-powered answers.`;
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json() as { messages?: ChatMessage[] };
@@ -16,7 +24,7 @@ export async function POST(request: NextRequest) {
     }
 
     const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
-    if (!apiKey) return Response.json({ error: "Gemini is not configured. Add GEMINI_API_KEY to .env.local." }, { status: 503 });
+    if (!apiKey) return new Response(demoTutorResponse(messages[messages.length - 1].content), { headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-cache", "X-Tutor-Provider": "demo" } });
 
     const ai = new GoogleGenAI({ apiKey });
     const chat = ai.chats.create({
